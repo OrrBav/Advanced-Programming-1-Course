@@ -1,4 +1,4 @@
-# Advanced-Programming-1
+# Advanced-Programming-ex 1 - part 1 - git exercise
 repository for the course AP1
 change 1-23
 adding a second change 
