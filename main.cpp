@@ -88,7 +88,7 @@ int main()
         cout << "inputs should have the same number of numbers";
         return -1;
     }
-    cout << "success";
+    cout << "success operation";
     return 0;
 }
 
