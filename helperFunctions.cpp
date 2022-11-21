@@ -17,7 +17,7 @@ vector <float> vectorSubstruction(vector <float> v1, vector <float> v2) {
 }
 
 // returns the vector after each elemnt was raised to the power of toThePowerOf
-vector <float> vectorRaiseToPower(vector <float> vector, int toThePowerOf) {
+vector <float> vectorRaiseToPower(vector <float> vector, int toThePowerOf = 2) {
      
      for (int i = 0; i < vector.size(); i++) {
        vector.at(i) = pow(vector.at(i),toThePowerOf);
