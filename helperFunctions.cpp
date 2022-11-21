@@ -1,9 +1,12 @@
 
+#include <math.h>
+#include <stdio.h>
 #include <iostream>
 #include <vector>
 using namespace std;
 
 
+// returns the sabstruction result of the 2 input vectors
 vector <float> vectorSubstruction(vector <float> v1, vector <float> v2) {
 
     vector <float> v3;  // the output vetor
@@ -13,17 +16,53 @@ vector <float> vectorSubstruction(vector <float> v1, vector <float> v2) {
     return v3;
 }
 
+// returns the vector after each elemnt was raised to the power of toThePowerOf
+vector <float> vectorRaiseToPower(vector <float> vector, int toThePowerOf) {
+     
+     for (int i = 0; i < vector.size(); i++) {
+       vector.at(i) = pow(vector.at(i),toThePowerOf);
+     }
+    return vector;
+}
 
-int main()
-{
-    vector <float> v1 = {-2,5,6,3};
-    vector <float> v2 = {1,3,8,2};
+// returns the vector with the square root of each elemnt
+vector <float> vectorSquareRoot(vector <float> vector) {
+     
+     for (int i = 0; i < vector.size(); i++) {
+       vector.at(i) = sqrt(vector.at(i));
+     }
+    return vector;
+}
 
-    vector <float> substructedVector = vectorSubstruction(v1, v2);
+// returns the vector with the absolute value of each elemnt
+vector <float> vectorAbsolute(vector <float> vector) {
+     
+     for (int i = 0; i < vector.size(); i++) {
+       vector.at(i) = abs(vector.at(i));
+     }
+    return vector;
+}
 
-    for (float i : substructedVector)
-        std::cout << i << ' ';
-
+// returns the sum of input vector
+float vectorSum(vector <float> vector) {
+     float sum = 0;
+     for (int i = 0; i < vector.size(); i++) {
+       sum += vector.at(i);
+     }
+    return sum;
 }
 
 
+int main()
+{
+    vector <float> v1 = {-4,2.1,49,56};
+    vector <float> v2 = {1,3,8,2};
+
+    // for testing:
+    // vector <float> vecAbs = vectorAbsolute(v1);
+    // for (float i : vecAbs) {
+    //     cout << i << ' ';
+    // }
+    // cout << '\n';
+
+}
