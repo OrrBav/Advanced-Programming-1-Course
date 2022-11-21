@@ -53,16 +53,16 @@ float vectorSum(vector <float> vector) {
 }
 
 
-int main()
-{
-    vector <float> v1 = {-4,2.1,49,56};
-    vector <float> v2 = {1,3,8,2};
+// int main()
+// {
+//     // for testing:
+//     // vector <float> v1 = {-4,2.1,49,56};
+//     // vector <float> v2 = {1,3,8,2};
 
-    // for testing:
-    // vector <float> vecAbs = vectorAbsolute(v1);
-    // for (float i : vecAbs) {
-    //     cout << i << ' ';
-    // }
-    // cout << '\n';
+//     // vector <float> vecAbs = vectorAbsolute(v1);
+//     // for (float i : vecAbs) {
+//     //     cout << i << ' ';
+//     // }
+//     // cout << '\n';
 
-}
+// }
