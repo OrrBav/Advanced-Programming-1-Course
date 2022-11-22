@@ -16,7 +16,7 @@ this is the manual for the second part of Ex1.
 2. input_check.cpp - the two input vectors first undergo a series of input checks, in order to make sure they are a valid input that we can perform calculations on. in addition, it contains print_decimal function, which ensures values are printed as instructed.
 3. distanceFunctions.cpp - we compute Euclidean, Manhattan, Chebyshev, Canberra and Minkowski distance, as requested, by the wikipedia formula. each functions returns a float that represents said distance.
 Canberra distance has a const of p=1 by default.
-4. helperFunctions.cpp - he distance functions use different operations such as absolute value, sum, square root and others, and this files holds all the relevant functions.
+4. helperFunctions.cpp - the distance functions use different operations such as absolute value, sum, square root and others, and this files holds all the relevant functions.
 
 when you run the file, you should enter a series of numbers (can have a decimal point) separated by a single space between them, without any spaces before or after the first and last number, accordingly. any deviation from that format, or input vectors that are not of the same size, will result in termination of the program, after an error message.
 
