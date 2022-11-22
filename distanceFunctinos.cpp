@@ -1,25 +1,24 @@
 #include <vector>
 #include <iostream>
 using namespace std;
+#include "function.h"
 
-//#include "helperFunctions"
-using namespace std;
 
 float euclideanDistance(vector <float> v1, vector <float> v2) {
-    vector <float> resultVector = vectorSquareRoot(vectorRaiseToPower(vectorSubstruction(v1,v2)));
-    return resultVector;
+    float eucDist = vectorSquareRoot(vectorRaiseToPower(vectorSubstruction(v1,v2)));
+    return eucDist;
 
 }
 
 
-float manhattanDistance(): {
+float manhattanDistance() {
 
 
     
 }
 
 
-float chebyshevDistance(): {
+float chebyshevDistance() {
 
 
     
@@ -38,6 +37,7 @@ float CanberraDistance(vector <float> v1, vector <float> v2) {
     return vectorSum(resultVector);
 
 }
+
 
 
 float minkowskiDistance(vector <float> v1, vector <float> v2) {
