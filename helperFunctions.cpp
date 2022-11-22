@@ -53,6 +53,18 @@ float vectorSum(vector <float> vector) {
 }
 
 
+// returns the addition of 2 input vectors 
+vector <float> vectorAddition(vector <float> v1, vector <float> v2) {
+    vector <float> v3;  // the output vetor
+    for (int i = 0; i < v1.size(); i++) {
+        v3.push_back(v1.at(i) + v2.at(i));
+    }
+    return v3;
+}
+
+
+
+
 // int main()
 // {
 //     // for testing:
