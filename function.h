@@ -7,6 +7,7 @@ using namespace std;
 #define ADVANCED_PROGRAMMING_1_FUNCTION_H
 
 vector <float> check(string input_str, vector <float>& numbers);
+void print_decimal(float q);
 
 // helper Functions:
 vector <float> vectorSubstruction(vector <float> v1, vector <float> v2);

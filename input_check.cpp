@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
+#include <math.h>
 
 using namespace std;
 /*
@@ -65,4 +65,21 @@ vector <float> check(string input_str, vector <float>& numbers) {
     }
     numbers.push_back(stof(new_num));
     return numbers;
+}
+
+
+void print_decimal(float q) {
+    double p = double(q);
+    // if p is an integer num
+    if (floor(p) == ceil(p)) {
+        cout.precision(1);
+        cout << fixed << p;
+
+    }
+    // if p has a decimal point
+    else {
+        cout.precision(4);
+        cout << fixed << p;
+    }
+
 }
