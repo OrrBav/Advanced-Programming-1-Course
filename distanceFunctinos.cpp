@@ -2,9 +2,9 @@
 using namespace std;
 
 /*
- * function calculates the Euclidean distance of two input vector, based on the wikipedia formula.
- * input - vector v1 and v2, containing float elements.
- * return - float representing Euclidean distance
+ * calculates the Euclidean distance of two input vectors, based on the wikipedia formula.
+ * @param v1 and v2 are input float vectors
+ * @return float representing the Euclidean distance result
  */
 float euclideanDistance(vector <float> v1, vector <float> v2) {
     float eucDist = vectorSquareRoot(vectorRaiseToPower(vectorSubtraction(v1,v2)));
@@ -13,9 +13,9 @@ float euclideanDistance(vector <float> v1, vector <float> v2) {
 }
 
 /*
- * function calculates the Manhattan distance of two input vector, based on the wikipedia formula.
- * input - vector v1 and v2, containing float elements.
- * return - float representing Manhattan distance
+ * calculates the Manhattan distance of two input vectors, based on the wikipedia formula.
+ * @param v1 and v2 are input float vectors.
+ * @return float representing Manhattan distance result
  */
 float manhattanDistance(vector <float> v1, vector <float> v2) {
     float manDist = vectorSum(vectorAbsolute(vectorSubtraction(v1, v2)));
@@ -24,9 +24,9 @@ float manhattanDistance(vector <float> v1, vector <float> v2) {
 }
 
 /*
- * function calculates the Chebyshev distance of two input vector, based on the wikipedia formula.
- * input - vector v1 and v2, containing float elements.
- * return - float representing Chebyshev distance
+ * calculates the Chebyshev distance of two input vectors, based on the wikipedia formula.
+ * @param v1 and v2 are input float vectors.
+ * @return float representing Chebyshev distance result
  */
 float chebyshevDistance(vector <float> v1, vector <float> v2) {
     vector <float> sabtructedVec  = vectorSubtraction(v1, v2);
@@ -40,9 +40,9 @@ float chebyshevDistance(vector <float> v1, vector <float> v2) {
 }
 
 /*
- * function calculates the Canberra distance of two input vector, based on the wikipedia formula.
- * input - vector v1 and v2, containing float elements.
- * return - float representing Canberra distance
+ * calculates the Canberra distance of two input vectors, based on the wikipedia formula.
+ * @param v1 and v2 are input float vectors.
+ * @return float representing Canberra distance result
  */
 float canberraDistance(vector <float> v1, vector <float> v2) {
     vector<float> numerator, denominator, resultVector;
@@ -60,9 +60,9 @@ float canberraDistance(vector <float> v1, vector <float> v2) {
 }
 
 /*
- * function calculates the Minkowski distance of two input vector, based on the wikipedia formula.
- * input - vector v1 and v2, containing float elements.
- * return - float representing Minkowski distance
+ * calculates the Minkowski distance of two input vectors, based on the wikipedia formula.
+ * @param v1 and v2 are input float vectors.
+ * @return float representing Minkowski distance result
  */
 float minkowskiDistance(vector <float> v1, vector <float> v2) {
     const double p = 1;
