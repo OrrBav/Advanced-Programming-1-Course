@@ -1,7 +1,10 @@
 #include <vector>
+#include <iostream>
+using namespace std;
+
 //#include "helperFunctions"
 
-float euclideanDistance(vector <float> v1, vector <float> v2): {
+float euclideanDistance(vector <float> v1, vector <float> v2) {
     vector <float> resultVector = vectorSquareRoot(vectorRaiseToPower(vectorSubstruction(v1,v2)));
     return resultVector;
 
