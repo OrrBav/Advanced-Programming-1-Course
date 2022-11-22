@@ -20,10 +20,16 @@ float manhattanDistance(vector <float> v1, vector <float> v2) {
 }
 
 
-float chebyshevDistance() {
+float chebyshevDistance(vector <float> v1, vector <float> v2) {
+    vector <float> sabtructedVec  = vectorSubstruction(v1, v2);
 
-
-    
+    float max = sabtructedVec.at(0); //init with first element in vector
+    for (int i = 0; i < sabtructedVec.size(); i++)    {
+        if (sabtructedVec.at(i) > max) {
+            max = sabtructedVec.at(i); 
+        } 
+    }
+    return max;
 }
 
 
@@ -41,12 +47,9 @@ float CanberraDistance(vector <float> v1, vector <float> v2) {
 }
 
 
-
 float minkowskiDistance(vector <float> v1, vector <float> v2) {
     const double p = 1;
     float sum = vectorSum(vectorRaiseToPower(vectorAbsolute(vectorSubstruction(v1, v2)), p));
     return(pow(sum, 1 / p));
 
 }
-
-
