@@ -1,4 +1,3 @@
-// Created by orrbb on 20/11/2022.
 #include <iostream>
 #include <vector>
 #include <string>
@@ -35,7 +34,12 @@ int main()
     print_decimal(euclideanDistance(numbers1, numbers2));
     print_decimal(manhattanDistance(numbers1, numbers2));
     print_decimal(chebyshevDistance(numbers1, numbers2));
-    print_decimal(canberraDistance(numbers1, numbers2));
+    if (canberraDistance(numbers1, numbers2) == -1) {
+        cout << "cannot divide by zero" << endl;
+    }
+    else {
+        print_decimal(canberraDistance(numbers1, numbers2));
+    }
     print_decimal(minkowskiDistance(numbers1, numbers2));
     return 0;
 

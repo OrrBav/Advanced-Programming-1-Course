@@ -1,7 +1,3 @@
-//
-// Created by orrbb on 21/11/2022.
-//
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -9,8 +5,9 @@
 
 using namespace std;
 /*
- * function should iterate over input string and check if input is valid.
- * if so - save as str
+ * function should iterate over users input(represented by input_str) and check if input is valid.
+ * valid input - only numbers (can have decimal point) separated by dots.
+ * return - vector containing float values of user's input numbers, or exception is input is invalid.
  */
 vector <float> check(string input_str, vector <float>& numbers) {
     string new_num;
@@ -38,7 +35,7 @@ vector <float> check(string input_str, vector <float>& numbers) {
                 if (space_flag == true) {
                     throw invalid_argument("input should be numbers separated by spaces.");
                 }
-                    // prepare for a new valid number
+                // prepare for a new valid number
                 else {
                     space_flag = true;
                     dot_flag = false;
@@ -57,7 +54,7 @@ vector <float> check(string input_str, vector <float>& numbers) {
                     new_num += ".";
                 }
             }
-                // invalid char
+            // invalid char
             else {
                 throw invalid_argument("input should be numbers separated by spaces.");
             }
@@ -67,7 +64,11 @@ vector <float> check(string input_str, vector <float>& numbers) {
     return numbers;
 }
 
-
+/*
+ * function ensures print values are as instructed, by determining how many decimal point should be printed on user's
+ * screen.
+ * input - float number q, which is the distance calculated on main.
+ */
 void print_decimal(float q) {
     double p = double(q);
     // if p is an integer num

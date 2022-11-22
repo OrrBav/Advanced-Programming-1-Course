@@ -10,7 +10,7 @@ vector <float> check(string input_str, vector <float>& numbers);
 void print_decimal(float q);
 
 // helper Functions:
-vector <float> vectorSubstruction(vector <float> v1, vector <float> v2);
+vector <float> vectorSubtraction(vector <float> v1, vector <float> v2);
 vector <float> vectorRaiseToPower(vector <float> vector, double toThePowerOf = 2);
 float vectorSquareRoot(vector <float> vector);
 vector <float> vectorAbsolute(vector <float> vector);
