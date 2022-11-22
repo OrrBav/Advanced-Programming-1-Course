@@ -25,13 +25,11 @@ vector <float> vectorRaiseToPower(vector <float> vector, int toThePowerOf = 2) {
     return vector;
 }
 
-// returns the vector with the square root of each elemnt
-vector <float> vectorSquareRoot(vector <float> vector) {
+// sums all the elements in the vector and perform square root on the sum
+float vectorSquareRoot(vector <float> vector) {
      
-     for (int i = 0; i < vector.size(); i++) {
-       vector.at(i) = sqrt(vector.at(i));
-     }
-    return vector;
+    float vectorSquarred = sqrt(vectorSum(vector));
+    return vectorSquarred;
 }
 
 // returns the vector with the absolute value of each elemnt
@@ -63,11 +61,10 @@ vector <float> vectorAddition(vector <float> v1, vector <float> v2) {
 }
 
 
-
-
+ // for testing:
 // int main()
 // {
-//     // for testing:
+//    
 //     // vector <float> v1 = {-4,2.1,49,56};
 //     // vector <float> v2 = {1,3,8,2};
 

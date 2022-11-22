@@ -11,7 +11,7 @@ vector <float> check(string input_str, vector <float>& numbers);
 // helper Functions:
 vector <float> vectorSubstruction(vector <float> v1, vector <float> v2);
 vector <float> vectorRaiseToPower(vector <float> vector, int toThePowerOf = 2);
-vector <float> vectorSquareRoot(vector <float> vector);
+float vectorSquareRoot(vector <float> vector);
 vector <float> vectorAbsolute(vector <float> vector);
 float vectorSum(vector <float> vector);
 vector <float> vectorAddition(vector <float> v1, vector <float> v2);
