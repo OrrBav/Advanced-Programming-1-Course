@@ -35,7 +35,7 @@ int main()
     print_decimal(euclideanDistance(numbers1, numbers2));
     print_decimal(manhattanDistance(numbers1, numbers2));
     print_decimal(chebyshevDistance(numbers1, numbers2));
-    print_decimal(CanberraDistance(numbers1, numbers2));
+    print_decimal(canberraDistance(numbers1, numbers2));
     print_decimal(minkowskiDistance(numbers1, numbers2));
     return 0;
 

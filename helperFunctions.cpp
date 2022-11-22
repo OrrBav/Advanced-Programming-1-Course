@@ -59,19 +59,3 @@ vector <float> vectorAddition(vector <float> v1, vector <float> v2) {
     }
     return v3;
 }
-
-
- // for testing:
-// int main()
-// {
-//    
-//     // vector <float> v1 = {-4,2.1,49,56};
-//     // vector <float> v2 = {1,3,8,2};
-
-//     // vector <float> vecAbs = vectorAbsolute(v1);
-//     // for (float i : vecAbs) {
-//     //     cout << i << ' ';
-//     // }
-//     // cout << '\n';
-
-// }

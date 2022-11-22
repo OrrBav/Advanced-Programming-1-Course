@@ -19,6 +19,9 @@ vector <float> vectorAddition(vector <float> v1, vector <float> v2);
 
 // distance functions:
 float euclideanDistance(vector <float> v1, vector <float> v2);
+float manhattanDistance(vector <float> v1, vector <float> v2);
+float chebyshevDistance(vector <float> v1, vector <float> v2);
+float canberraDistance(vector <float> v1, vector <float> v2);
 float minkowskiDistance(vector <float> v1, vector <float> v2);
 
 #endif //ADVANCED_PROGRAMMING_1_FUNCTION_H
