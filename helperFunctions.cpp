@@ -2,11 +2,14 @@
 using namespace std;
 
 /*
- *  returns the subtraction result of the 2 input vectors
+ * calculates the subtraction result of the 2 input vectors.
+ * @param v1, v2 input vectors
+ * @param v3 the result vector
+ * @return float vector thats holds the result
  */
 vector <float> vectorSubtraction(vector <float> v1, vector <float> v2) {
 
-    vector <float> v3;  // the output vetor
+    vector <float> v3;
     for (int i = 0; i < v1.size(); i++) {
         v3.push_back(v1.at(i) - v2.at(i)) ;
     }
@@ -14,8 +17,10 @@ vector <float> vectorSubtraction(vector <float> v1, vector <float> v2) {
 }
 
 /*
- * returns the vector after each element was raised to the power of toThePowerOf.
- * toThePowerOf default value is 2.
+ * raises each element in the input vector to the power of toThePowerOf.
+ * @param toThePowerOf is the power we raise, default value is 2.
+ * @param vector the input vector
+ * @return float vector thats holds the result
  */
 vector <float> vectorRaiseToPower(vector <float> vector, double toThePowerOf) {
      
@@ -26,8 +31,10 @@ vector <float> vectorRaiseToPower(vector <float> vector, double toThePowerOf) {
 }
 
 /*
- *  sums all the elements in the vector and perform square root on the sum.
- *  return - the squared root of the sum of elements in input vector.
+ *  sums all the elements in the input vector and perform square root on the sum.
+ *  @param vector input vector
+ *  @param vectorSquarred is the float result
+ *  @return the squared root of the sum of elements in input vector.
  */
 float vectorSquareRoot(vector <float> vector) {
      
@@ -36,7 +43,9 @@ float vectorSquareRoot(vector <float> vector) {
 }
 
 /*
- * returns the vector with the absolute value of each input vector element.
+ * calculates the absolute value of each element in the input vector.
+ * @param vector input vector and also the return vector after absolute value.
+ * @return float vector thats holds the result 
  */
 vector <float> vectorAbsolute(vector <float> vector) {
      
@@ -47,8 +56,9 @@ vector <float> vectorAbsolute(vector <float> vector) {
 }
 
 /*
- * returns the float sum of input vector.
- * input - input vector.
+ * calculates the sum of the elements in the input vector.
+ * @param vector input  vector
+ * @return the float sum of the vector.
  */
 float vectorSum(vector <float> vector) {
      float sum = 0;
@@ -59,11 +69,13 @@ float vectorSum(vector <float> vector) {
 }
 
 /*
- * creates a new vector, which each element is the result of addition of the corresponding elements in input vectors.
- * input - two vectors containing float elements.
+ * calculates the addition result of the 2 input vectors.
+ * @param v1, v2 input float vectors
+ * @param v3 the result float vector
+ * @return float vector thats holds the result 
  */
 vector <float> vectorAddition(vector <float> v1, vector <float> v2) {
-    vector <float> v3;  // the output vetor
+    vector <float> v3;
     for (int i = 0; i < v1.size(); i++) {
         v3.push_back(v1.at(i) + v2.at(i));
     }
