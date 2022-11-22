@@ -1,6 +1,8 @@
 #include <vector>
 #include <iostream>
+#include <math.h>
 using namespace std;
+
 #include "function.h"
 
 
@@ -11,9 +13,9 @@ float euclideanDistance(vector <float> v1, vector <float> v2) {
 }
 
 
-float manhattanDistance() {
-
-
+float manhattanDistance(vector <float> v1, vector <float> v2) {
+    float manDist = vectorSum(vectorAbsolute(vectorSubstruction(v1, v2)));
+    return manDist;
     
 }
 
@@ -41,7 +43,7 @@ float CanberraDistance(vector <float> v1, vector <float> v2) {
 
 
 float minkowskiDistance(vector <float> v1, vector <float> v2) {
-    const int p = 1;
+    const double p = 1;
     float sum = vectorSum(vectorRaiseToPower(vectorAbsolute(vectorSubstruction(v1, v2)), p));
     return(pow(sum, 1 / p));
 
