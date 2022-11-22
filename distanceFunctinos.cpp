@@ -1,9 +1,5 @@
-#include <vector>
-#include <math.h>
 #include "function.h"
 using namespace std;
-
-
 
 /*
  * function calculates the Euclidean distance of two input vector, based on the wikipedia formula.

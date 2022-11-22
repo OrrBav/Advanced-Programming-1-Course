@@ -1,6 +1,3 @@
-#include <math.h>
-#include <iostream>
-#include <vector>
 #include "function.h"
 using namespace std;
 

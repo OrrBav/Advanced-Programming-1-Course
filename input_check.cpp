@@ -1,8 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <math.h>
-
+#include "function.h"
 using namespace std;
 /*
  * function should iterate over users input(represented by input_str) and check if input is valid.
@@ -16,7 +12,8 @@ vector <float> check(string input_str, vector <float>& numbers) {
     bool dot_flag = false;
     // finds if first and last char in string are digits, and ensures for loop logic
     if ((isdigit(input_str[0]) == false) || isdigit(input_str[input_str.length() - 1]) == false) {
-        throw invalid_argument("input should be numbers separated by spaces.");
+        cout << "input should be numbers separated by spaces." << endl;
+        exit (0);
     }
     for (int i = 0; i < input_str.length(); i++) {
         if (isdigit(input_str[i]) == true) {
@@ -33,7 +30,8 @@ vector <float> check(string input_str, vector <float>& numbers) {
             // two consecutive spaces
             if (input_str[i] == ' ') {
                 if (space_flag == true) {
-                    throw invalid_argument("input should be numbers separated by spaces.");
+                    cout << "input should be numbers separated by spaces." << endl;
+                    exit (0);
                 }
                 // prepare for a new valid number
                 else {
@@ -47,7 +45,8 @@ vector <float> check(string input_str, vector <float>& numbers) {
             else if(input_str[i] == '.') {
                 // there was already a dot in number
                 if (dot_flag == true) {
-                    throw invalid_argument("input should be numbers separated by spaces.");
+                    cout << "input should be numbers separated by spaces." << endl;
+                    exit (0);
                 }
                 else {
                     dot_flag = true;
@@ -56,7 +55,8 @@ vector <float> check(string input_str, vector <float>& numbers) {
             }
             // invalid char
             else {
-                throw invalid_argument("input should be numbers separated by spaces.");
+                cout << "input should be numbers separated by spaces." << endl;
+                exit (0);
             }
         }
     }
