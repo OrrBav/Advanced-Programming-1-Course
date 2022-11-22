@@ -73,13 +73,13 @@ void print_decimal(float q) {
     // if p is an integer num
     if (floor(p) == ceil(p)) {
         cout.precision(1);
-        cout << fixed << p;
+        cout << fixed << p << endl;
 
     }
     // if p has a decimal point
     else {
         cout.precision(4);
-        cout << fixed << p;
+        cout << fixed << p << endl;
     }
 
 }
