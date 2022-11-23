@@ -29,4 +29,5 @@ the code will compute the distance, and will print:
 ![image](https://user-images.githubusercontent.com/101596419/203522486-b85ae8be-5fab-4490-b4d2-170f09da49a8.png)
 
 
-
+following text it for the first part of the exercise:
+my first commit
