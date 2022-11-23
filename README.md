@@ -31,3 +31,4 @@ the code will compute the distance, and will print:
 
 following text it for the first part of the exercise:
 my first commit
+my second commit
