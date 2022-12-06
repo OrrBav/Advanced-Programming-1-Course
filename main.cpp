@@ -1,5 +1,6 @@
 #include "function.h"
 #include "readFromFile.h"
+//#include "readFromFile.cpp"
 
 using namespace std;
 
@@ -29,20 +30,21 @@ int main()
     // print_decimal(minkowskiDistance(numbers1, numbers2));
 
 
-    readFromFile inputFile("iris_classified.csv");
-    inputFile.read();
+
+    readFromFile reader("iris_classified.csv");
+    reader.read();
 
     string inputVector;
     vector<float> numbers;
     getline(cin, inputVector);
     check(inputVector, numbers);
-    // if (numbers.size() != numOfInputs - 1) {
-    //     cout << "input vector should have " << (numOfInputs - 1) << " elemnts, separated by spaces." << endl;
-    //     return -1;
-    // } 
-    // else {
-    //     cout << "same size" << endl;
-    // }
+    if (numbers.size() != reader.valuesPerLine - 1) {
+        cout << "input vector should have " << (reader.valuesPerLine - 1) << " elements, separated by spaces." << endl;
+        return -1;
+    } 
+    else {
+        cout << "same size" << endl;
+    }
 
     return 0;
 

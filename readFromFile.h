@@ -1,20 +1,24 @@
 
+
 #include <string>
 using namespace std;
 
-#ifndef DATE_H
-#define DATE_H
+#ifndef READ_FROM_FILE_H
+#define READ_FROM_FILE_H
 
-class readFromFile
-{
-private:
+class readFromFile {
+
+public: // TODO: members should be private??
+    // members:
     string fileName;
+    int valuesPerLine;
 
-public:
+    // constructor:
     readFromFile(string inputFile);
+
+    // the read function:
     int read();
 };
-
 
 #endif
 
