@@ -3,44 +3,48 @@
 #include "knn.h"
 #include "readFromFile.h"
 #include <string>
+#include <sstream>
+
+#define ARG_SIZE (4)
 
 using namespace std;
 
-int main(int argc, char** argv[])
+int main(int argc, char *argv[])
 {
-
-    readFromFile reader("iris_classified.csv");
-    reader.read();
-    string inputVector;
-    vector<float> numbers;
-    getline(cin, inputVector);
-    check(inputVector, numbers);
-    if (numbers.size() != reader.featuresPerLine) {
-        cout << "input vector should have " << (reader.featuresPerLine) << " elements, separated by spaces." << endl;
+    if (argc != ARG_SIZE) {
+        cout << "Should have received " << ARG_SIZE << " arguments, but received " << argc << " instead" << endl;
         exit(-1);
-    } 
-    else {
-        cout << "same size" << endl;
     }
+
+    string filename = argv[2];
+    string distanceFuncName = argv[3];
+
+    int k;
+    if (isInteger(argv[1])) {
+        k = stoi(argv[1]);
+    }
+    else {
+        cout << "received invalid value for k: " << argv[1] << " (should be an integer)" << endl;
+        exit(-1);
+    }
+
+    readFromFile reader(filename);
+    reader.read();
     
+    Knn knn = Knn(k, distanceFuncName, reader.X_train, reader.y_train);
+    
+    string inputVector;
+    struct ParsedLine ret;
+    while (true) {
+        getline(cin, inputVector);
+        ret = parseInput(inputVector, false, ' ');
+        if (ret.features.size() != reader.featuresPerLine) {
+            cout << "input vector should have " << (reader.featuresPerLine) << " elements, separated by spaces." << endl;
+            exit(-1);
+        }
 
-    // vector<vector<float>> x_train
-    //         {
-    //                 {1, 2, 3},
-    //                 {4, 5, 6},
-    //                 {3, 2, 1}
-    //         };
-    // vector <string> y_train {
-    //         "a", "b", "a"
-    // };
-    // int k = 2;
-    // Knn knn = Knn(k, "lol",x_train, y_train);
-    // vector <float> test {
-    //     4.5, 5.2, 5.9
-    // };
-    // string s = knn.predict(test);
-    // cout << s << endl;
-    // // should add delete for distance metric in knn
+        string prediction = knn.predict(ret.features);
+        cout << prediction << endl;
+    }
     return 0;
-
 }

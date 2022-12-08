@@ -9,7 +9,7 @@
 
 class Knn {
     int k;
-    DistanceMetric* disFun;
+    DistanceMetric disFun;
     vector<vector<float>> x_train;
     vector <string> y_train;
 public:
