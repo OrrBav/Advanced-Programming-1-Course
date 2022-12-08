@@ -31,7 +31,7 @@ vector <float> check(string input_str, vector <float>& numbers) {
             if (input_str[i] == ' ') {
                 if (space_flag == true) {
                     cout << "input should be numbers separated by spaces." << endl;
-                    exit (0);
+                    exit (-1);
                 }
                 // prepare for a new valid number
                 else {
@@ -46,7 +46,7 @@ vector <float> check(string input_str, vector <float>& numbers) {
                 // there was already a dot in number
                 if (dot_flag == true) {
                     cout << "input should be numbers separated by spaces." << endl;
-                    exit (0);
+                    exit (-1);
                 }
                 else {
                     dot_flag = true;
@@ -56,7 +56,7 @@ vector <float> check(string input_str, vector <float>& numbers) {
             // invalid char
             else {
                 cout << "input should be numbers separated by spaces." << endl;
-                exit (0);
+                exit (-1);
             }
         }
     }

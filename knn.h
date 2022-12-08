@@ -4,9 +4,18 @@
 
 #ifndef ADVANCED_PROGRAMMING_1_KNN_H
 #define ADVANCED_PROGRAMMING_1_KNN_H
+#include "distanceMatric.h"
+#include <vector>
 
-
-class knn {
+class Knn {
+    int k;
+    DistanceMetric* disFun;
+    vector<vector<float>> x_train;
+    vector <string> y_train;
+public:
+    Knn(int k, string funcName, vector<vector<float>> &x_vector, vector <string> &y_vector, DistanceMetric &disFun);
+    string predict (vector <float> x_test);
+    string commonLabel(vector <pair <float, string> > predictVector);
 
 };
 
