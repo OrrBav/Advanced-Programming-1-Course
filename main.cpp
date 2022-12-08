@@ -1,33 +1,27 @@
 //Orr, Ariel
 #include "function.h"
 #include "knn.h"
+#include "readFromFile.h"
+
 using namespace std;
 
-
-int main()
+int main(int argc, char *argv[])
 {
-//    string str1, str2;
-//    vector<float> numbers1, numbers2;
-//    getline(cin, str1);
-//    check(str1, numbers1);
-//    getline(cin, str2);
-//    check(str2, numbers2);
-//    if (numbers1.size() != numbers2.size()) {
-//        cout << "inputs should have the same number of numbers" << endl;
-//        return -1;
-//    }
-//
-//    print_decimal(euclideanDistance(numbers1, numbers2));
-//    print_decimal(manhattanDistance(numbers1, numbers2));
-//    print_decimal(chebyshevDistance(numbers1, numbers2));
-//    if (canberraDistance(numbers1, numbers2) == -1) {
-//        cout << "Canberra distance error: cannot divide by zero" << endl;
-//    }
-//    else {
-//        print_decimal(canberraDistance(numbers1, numbers2));
-//    }
-//    print_decimal(minkowskiDistance(numbers1, numbers2));
-//    return 0;
+
+    readFromFile reader("iris_classified.csv");
+    reader.read();
+    string inputVector;
+    vector<float> numbers;
+    getline(cin, inputVector);
+    check(inputVector, numbers);
+    if (numbers.size() != reader.featuresPerLine) {
+        cout << "input vector should have " << (reader.featuresPerLine) << " elements, separated by spaces." << endl;
+        exit(-1);
+    } 
+    else {
+        cout << "same size" << endl;
+    }
+    
     vector<vector<float>> x_train
             {
                     {1, 2, 3},
@@ -45,4 +39,6 @@ int main()
     string s = knn.predict(test);
     cout << s << endl;
     // should add delete for distance metric in knn
+    return 0;
+
 }
