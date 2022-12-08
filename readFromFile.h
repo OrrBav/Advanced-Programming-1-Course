@@ -1,5 +1,4 @@
 
-
 #include <string>
 using namespace std;
 
@@ -7,11 +6,15 @@ using namespace std;
 #define READ_FROM_FILE_H
 
 class readFromFile {
-
-public: // TODO: members should be private??
-    // members:
+private:
     string fileName;
-    int valuesPerLine;
+    vector<float> handleLine(string& line);
+public:
+    // our 2d vector, containing all inputs
+    vector<vector<float>> X_train;
+    // the labels of the inputs (X_train)
+    vector<string> y_train;
+    int featuresPerLine;
 
     // constructor:
     readFromFile(string inputFile);
