@@ -7,9 +7,8 @@
 #include<bits/stdc++.h>
 
 Knn::Knn(int k, string funcName, vector<vector<float>> &x_vector, vector <string> &y_vector)
-        : disFun(nullptr) {
+        : disFun(funcName) {
     this->k = k;
-    this->disFun = new DistanceMetric(funcName);
     x_train = x_vector;
     y_train = y_vector;
 }
@@ -19,7 +18,7 @@ string Knn::predict (vector <float> x_test ) {
     float distance = 0;
     string label = "";
     for (int i = 0; i < this->x_train.size(); i++) {
-        distance = this->disFun->calc_distance(x_train[i], x_test);
+        distance = this->disFun.calc_distance(x_train[i], x_test);
         label = y_train[i];
         predictVector.push_back(make_pair(distance, label));
     }

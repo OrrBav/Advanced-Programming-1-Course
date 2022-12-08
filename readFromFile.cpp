@@ -9,10 +9,10 @@
 
 using namespace std;
 
-// go over each line
-// in each line read the entire line (all values and the label)
-// values are stored in X_train 2d vector as strings.
-// labels are stored in labels 1d vector as strings.
+/* go over each line,
+in each line read the entire line (all values and the label)
+values are stored in X_train 2d vector as strings.
+labels are stored in labels 1d vector as strings.*/
 
 
 // constructor:
@@ -22,30 +22,10 @@ readFromFile::readFromFile(string inputFile) {
 }
 
 vector<float> readFromFile::handleLine(string& line) {
-    vector<string> row;
-    stringstream str(line); // puts current line in "str" variable
-    string word;
-    
-    while (getline(str, word, ','))
-        row.push_back(word);  // adds single word to row (vector)
-
-    // takes last input string in current row and adds it to labels
-    string label = row.back();
-    y_train.push_back(label);
-    // now delete this last string from row
-    row.pop_back();
-
-    // convert row (vector<string>) to a regular string
-    string stringsRow;
-    for (const auto &piece : row) stringsRow = stringsRow + piece + " ";
-    // delete last space " "
-    stringsRow.pop_back();
-    
-    // convert strings to vector<floats> and add to X_train
-    vector<float> floatsRow;
-    check(stringsRow, floatsRow);
-    X_train.push_back(floatsRow);
-    return floatsRow;
+    struct ParsedLine ret = parseInput(line, true, ',');
+    y_train.push_back(ret.label);
+    X_train.push_back(ret.features);
+    return ret.features;
 }
 
 int readFromFile::read() {
