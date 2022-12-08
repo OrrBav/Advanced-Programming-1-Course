@@ -48,7 +48,6 @@ vector<float> readFromFile::handleLine(string& line) {
     return floatsRow;
 }
 
-// the read function:
 int readFromFile::read() {
     string line, word;
     // open file and read from it
@@ -56,10 +55,10 @@ int readFromFile::read() {
     if (file.is_open()) {
         if (getline(file, line)) {
             vector<float> row = handleLine(line);
-            // initialize featuresPerLine according to the first line in the file
+            // read the first line in the file and initialize featuresPerLine
             featuresPerLine = row.size();
 
-            // reads from second line till end of file
+            // read the rest of the lines, from second line till end of file
             while (getline(file, line)) {
                 vector<float> row = handleLine(line);
                 if (featuresPerLine != row.size()) {
