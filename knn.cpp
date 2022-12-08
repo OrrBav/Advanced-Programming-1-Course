@@ -27,7 +27,7 @@ string Knn::predict (vector <float> x_test ) {
     return Knn::commonLabel(predictVector);
 }
 
-string Knn::commonLabel(vector <pair<float, std::string>> predictVector) {
+string Knn::commonLabel(vector <pair<float, string>> predictVector) {
     map<string, float> predictMap;
     string label = "";
     for (int i = 0; i < this->k; i++) {

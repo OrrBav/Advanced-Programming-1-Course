@@ -44,5 +44,5 @@ int main()
     };
     string s = knn.predict(test);
     cout << s << endl;
-
+    // should add delete for distance metric in knn
 }
