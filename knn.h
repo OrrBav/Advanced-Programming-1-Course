@@ -13,7 +13,7 @@ class Knn {
     vector<vector<float>> x_train;
     vector <string> y_train;
 public:
-    Knn(int k, string funcName, vector<vector<float>> &x_vector, vector <string> &y_vector, DistanceMetric &disFun);
+    Knn(int k, string funcName, vector<vector<float>> &x_vector, vector <string> &y_vector);
     string predict (vector <float> x_test);
     string commonLabel(vector <pair <float, string> > predictVector);
 

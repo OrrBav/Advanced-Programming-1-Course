@@ -42,5 +42,6 @@ float DistanceMetric::calc_distance(vector <float> v1, vector <float> v2) {
         float sum = vectorSum(vectorRaiseToPower(vectorAbsolute(vectorSubtraction(v1, v2)), p));
         return(pow(sum, 1 / p));
     }
-    cout << ""    // represents an error
+    cout << "Invalid input of distance function." << endl;
+    exit(-1);
 }

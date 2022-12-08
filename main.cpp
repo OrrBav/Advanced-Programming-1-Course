@@ -1,6 +1,6 @@
 //Orr, Ariel
 #include "function.h"
-
+#include "knn.h"
 using namespace std;
 
 
@@ -28,11 +28,21 @@ int main()
 //    }
 //    print_decimal(minkowskiDistance(numbers1, numbers2));
 //    return 0;
-    vector<vector<int>> vect
+    vector<vector<float>> x_train
             {
                     {1, 2, 3},
                     {4, 5, 6},
-                    {7, 8, 9}
+                    {3, 2, 1}
             };
+    vector <string> y_train {
+            "a", "b", "a"
+    };
+    int k = 2;
+    Knn knn = Knn(k, "lol",x_train, y_train);
+    vector <float> test {
+        4.5, 5.2, 5.9
+    };
+    string s = knn.predict(test);
+    cout << s << endl;
 
 }
