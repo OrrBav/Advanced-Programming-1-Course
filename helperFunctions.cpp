@@ -25,6 +25,7 @@ bool isPositiveInteger(char *str) {
 /* check if given string holds a valid float value */
 bool isFloat(string& str) {
     // create a stream from param 'str' because we want to read from it like cin
+    // this also makes sure we can read small floats with 'E' like 9.736518826502699E-4
     istringstream stream(str);
     float f;
     stream >> f;
@@ -37,7 +38,7 @@ bool isFloat(string& str) {
     return ReachedEndOfString && succeeded;
 }
 
-/*  this function should parse the line given to it, and exit if there's an error (e.g. feature is not a float)
+/*  this function should parse the line given to it, and exit if there's an error (feature is not a float)
     we use hasLabel=true when we read from an input file with labels
     we use hasLabel=false when we read input from the user (no label) */
 ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {

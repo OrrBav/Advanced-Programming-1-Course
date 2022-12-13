@@ -5,7 +5,8 @@
         "ostream": "cpp",
         "sstream": "cpp",
         "*.tcc": "cpp",
-        "deque": "cpp"
+        "deque": "cpp",
+        "iosfwd": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }
