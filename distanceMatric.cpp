@@ -4,12 +4,27 @@
 
 #include "distanceMatric.h"
 #include "function.h"
-
+/*
+ * Constructor for distance metric class.
+ * @param funcName - string name of the desired distance function.
+ */
 DistanceMetric::DistanceMetric(string funcName) {
     dis_fun = funcName;
 }
 
+/*
+ * this function calculates the distance between 2 input vectors, according to the initialized given string.
+ * It has 5 different distance functions:
+ * AUC - Euclidean distance.
+ * MAN - Manhattan Distance.
+ * CHB - Chebyshev Distance.
+ * CAN - Canberra Distance.
+ * MIN - Minkowski Distance
+ * @param v1 and v2 are input float vectors.
+ * @return - the distance between the 2 input vectors.
+ */
 float DistanceMetric::calc_distance(vector <float> v1, vector <float> v2) {
+
     if (dis_fun == "AUC") {
         float eucDist = vectorSquareRoot(vectorRaiseToPower(vectorSubtraction(v1, v2)));
         return eucDist;

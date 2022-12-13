@@ -97,7 +97,7 @@ vector <float> vectorRaiseToPower(vector <float> vector, double toThePowerOf) {
 /*
  *  sums all the elements in the input vector and perform square root on the sum.
  *  @param vector input vector
- *  @param vectorSquarred is the float result
+ *  @param vectorSquared is the float result
  *  @return the squared root of the sum of elements in input vector.
  */
 float vectorSquareRoot(vector <float> vector) {
