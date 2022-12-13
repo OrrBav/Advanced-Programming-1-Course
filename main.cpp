@@ -2,8 +2,7 @@
 #include "function.h"
 #include "knn.h"
 #include "readFromFile.h"
-#include <string>
-#include <sstream>
+
 
 #define ARG_SIZE (4)
 
@@ -52,5 +51,5 @@ int main(int argc, char *argv[])
         string prediction = knn.predict(ret.features);
         cout << prediction << endl;
     }
-    return 0;
+    // should delete new dismetric object
 }
