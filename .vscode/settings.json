@@ -4,7 +4,8 @@
         "vector": "cpp",
         "ostream": "cpp",
         "sstream": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "deque": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

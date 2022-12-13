@@ -14,7 +14,6 @@ in each line read the entire line (all values and the label)
 values are stored in X_train 2d vector as strings.
 labels are stored in labels 1d vector as strings.*/
 
-
 // constructor:
 readFromFile::readFromFile(string inputFile) {
     fileName = inputFile;

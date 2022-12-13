@@ -3,10 +3,15 @@
 #include <sstream>
 using namespace std;
 
-bool isInteger(char *str) {
+/*  checks that the given string holds a valid and positive integer. 
+    receives a pointer to the beginning of the string and checks char after char
+*/
+bool isPositiveInteger(char *str) {
     if (*str == '\0') 
         return false;
-
+    if (*str == '0')
+        return false;
+    // check char after char in the given string
     while (*str != '\0') {
         if (!isdigit(*str)) {
             return false;
@@ -17,6 +22,7 @@ bool isInteger(char *str) {
     return true;
 }
 
+/* check if given string holds a valid float value */
 bool isFloat(string& str) {
     // create a stream from param 'str' because we want to read from it like cin
     istringstream stream(str);
@@ -27,20 +33,20 @@ bool isFloat(string& str) {
     bool ReachedEndOfString = stream.eof();
     // reading from the stream into a float number should have succeeded
     bool succeeded = !stream.fail();
-    // we're checking for end for string because of this example: "3.14hello" -> "hello", f=3.14
+    // we're checking for end for string to avoid something like this: "3.14hello" -> "hello", f=3.14
     return ReachedEndOfString && succeeded;
 }
 
-// this function should parse the line given to it, and exit if there's an error (e.g. feature is not a float)
-// we use hasLabel=true when we read from an input file with labels
-// we use hasLabel=false when we read input from the user (no label)
+/*  this function should parse the line given to it, and exit if there's an error (e.g. feature is not a float)
+    we use hasLabel=true when we read from an input file with labels
+    we use hasLabel=false when we read input from the user (no label) */
 ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
     // this struct holds the line's values: features and label (if exists)
     struct ParsedLine ret;
     stringstream strstream(line);
     vector<string> row;
     string word;
-    // read every word between the delimiter (e.g. ',' for csv and ' ' for user input)
+    // read every word between the delimiter (',' for csv and ' ' for user input)
     while (getline(strstream, word, delimiter)) 
         row.push_back(word);
 

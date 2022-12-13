@@ -11,7 +11,7 @@ struct ParsedLine {
     vector<float> features;
     string label;
 };
-bool isInteger(char *str);
+bool isPositiveInteger(char *str);
 bool isFloat(string& str);
 ParsedLine parseInput(string& line, bool hasLabel, char delimiter);
 

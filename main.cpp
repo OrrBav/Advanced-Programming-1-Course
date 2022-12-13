@@ -18,19 +18,25 @@ int main(int argc, char *argv[])
 
     string filename = argv[2];
     string distanceFuncName = argv[3];
-
+    
     int k;
-    if (isInteger(argv[1])) {
+    if (isPositiveInteger(argv[1])) {
         k = stoi(argv[1]);
     }
     else {
-        cout << "received invalid value for k: " << argv[1] << " (should be an integer)" << endl;
+        cout << "received invalid value for k: " << argv[1] << " (should be a positive integer)" << endl;
         exit(-1);
     }
 
     readFromFile reader(filename);
-    reader.read();
-    
+    reader.read();   
+
+    // make sure k value is smaller than the number of samples in given file
+    if (k >= reader.y_train.size())    {
+        cout << "k should be smaller than number of samples" << endl;
+        exit(-1);
+    }
+
     Knn knn = Knn(k, distanceFuncName, reader.X_train, reader.y_train);
     
     string inputVector;
