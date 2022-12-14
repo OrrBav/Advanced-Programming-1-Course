@@ -1,26 +1,23 @@
-a.out: distanceMatric.o helperFunctions.o input_check.o knn.o readFromFile.o main.o
-	g++ distanceMatric.o helperFunctions.o input_check.o knn.o readFromFile.o main.o -o a.out
+a.out: main.o distanceMatric.o helperFunctions.o input_check.o knn.o readFromFile.o
+	g++ main.o distanceMatric.o helperFunctions.o input_check.o knn.o readFromFile.o -o a.out
 
-main.o:
-	g++ -std=c++11 -c main.cpp main.h
+main.o: main.cpp main.h
+	g++ -std=c++11 -c main.cpp
 
-distanceMatric.o:
-	g++ -std=c++11 -c distanceMatric.cpp distanceMatric.h
+distanceMatric.o: distanceMatric.cpp distanceMatric.h
+	g++ -std=c++11 -c distanceMatric.cpp
 
-helperFunctions.o:
-	g++ -std=c++11 helperFunctions.cpp function.h
+helperFunctions.o: helperFunctions.cpp function.h
+	g++ -std=c++11 -c helperFunctions.cpp
 
-input_check.o:
-	g++ -std=c++11 -c input_check.cpp function.h
+input_check.o: input_check.cpp function.h
+	g++ -std=c++11 -c input_check.cpp
 
-knn.o:
-	g++ -std=c++11 -c knn.cpp knn.h
+knn.o: knn.cpp knn.h
+	g++ -std=c++11 -c knn.cpp
 
-readFromFile.o:
-	g++ -std=c++11 -c readFromFile.cpp readFromFile.h
-
-target: dependencies
-	action
+readFromFile.o: readFromFile.cpp readFromFile.h
+	g++ -std=c++11 -c readFromFile.cpp
 
 clean:
-	rm *.o *.h.gch a.out
+	rm *.o a.out
