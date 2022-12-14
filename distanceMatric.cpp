@@ -3,7 +3,6 @@
 //
 
 #include "distanceMatric.h"
-#include "function.h"
 /*
  * Constructor for distance metric class.
  * @param funcName - string name of the desired distance function.

@@ -3,13 +3,7 @@ using namespace std;
 
 #ifndef READ_FROM_FILE_H
 #define READ_FROM_FILE_H
-#include <sstream>
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <vector>
 #include "function.h"
-#include "readFromFile.h"
 
 class readFromFile {
 private:

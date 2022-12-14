@@ -7,6 +7,7 @@ using namespace std;
 #define ADVANCED_PROGRAMMING_1_DISTANCEMATRIC_H
 #include <string>
 #include <vector>
+#include "function.h"
 
 class DistanceMetric {
     string dis_fun;

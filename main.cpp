@@ -1,10 +1,7 @@
 //Orr, Ariel
-#include "function.h"
-#include "knn.h"
-#include "readFromFile.h"
 
+#include "main.h"
 
-#define ARG_SIZE (4)
 
 using namespace std;
 

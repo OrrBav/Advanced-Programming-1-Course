@@ -1,6 +1,5 @@
 #include "function.h"
-#include <iostream>
-#include <sstream>
+
 using namespace std;
 
 /*  checks that the given string holds a valid and positive integer. 
