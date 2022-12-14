@@ -51,5 +51,4 @@ int main(int argc, char *argv[])
         string prediction = knn.predict(ret.features);
         cout << prediction << endl;
     }
-    // should delete new dismetric object
 }
