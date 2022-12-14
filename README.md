@@ -21,6 +21,8 @@ The code comprised of couple of key classes: first we use Readfromfile.cpp to re
 
 when you run the file, you should enter a series of numbers (can have a decimal point) separated by a single space between them, without any spaces before or after the first and last number, accordingly. any deviation from that format, or input vectors that are not of the same size, will result in termination of the program, after an error message.
 
+For convinience reasons, we added the classified csv file to the repository, so cloning it will result of cloning said files as well.
+
 for example:
 
 ![image](https://user-images.githubusercontent.com/101596419/207710882-94903924-cefe-4ab6-8bd7-cca1e4a52a3b.png)
