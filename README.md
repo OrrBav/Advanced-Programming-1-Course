@@ -1,5 +1,5 @@
-# Advanced-Programming-ex 1 part 2
-this is the manual for the second part of Ex1.
+# Advanced-Programming- Ex 2
+this is the manual for Ex2.
 
 **to compile and run perform the following commands:**
 1. git init
@@ -11,12 +11,15 @@ this is the manual for the second part of Ex1.
 7. ./a.out
 
 
-**Our code includes 4 files:**
-1. main.cpp. - the main file of the program. gets input vector from user, and sends them to input_check.cpp to validate the numbers that the user typed, and then prints the result distance of each requested distance method, with a decimal point.
-2. input_check.cpp - the two input vectors first undergo a series of input checks, in order to make sure they are a valid input that we can perform calculations on. in addition, it contains print_decimal function, which ensures values are printed as instructed.
-3. distanceFunctions.cpp - we compute Euclidean, Manhattan, Chebyshev, Canberra and Minkowski distance, as requested, by the wikipedia formula. each functions returns a float that represents said distance.
-Canberra distance has a const of p=1 by default.
-4. helperFunctions.cpp - the distance functions use different operations such as absolute value, sum, square root and others, and this files holds all the relevant functions.
+**Our code is an implementation of the KNN algorithm:**
+the program is initiated from main, receiving 3 arguments to init the run-
+argv[1] is the chosen k value.
+argv[2] is the file name of the classified samples that will be used to predict a new sample.
+argv[3] is the chosen distance metric, written as an abbreviation (e.g "MAN" for manhattan distance).
+All of these arguments undergo a series of input checks to make sure they are valid. If found not valid- we exit the program with the relevant error.
+After initiated, an input vector is requested from the user, so it's class can be predicted by the KNN algorithm. This stage repeats in an infinite loop and the user can test an infinite amount of vectors and classify them.
+...
+...?
 
 when you run the file, you should enter a series of numbers (can have a decimal point) separated by a single space between them, without any spaces before or after the first and last number, accordingly. any deviation from that format, or input vectors that are not of the same size, will result in termination of the program, after an error message.
 
