@@ -1,11 +1,21 @@
+#ifndef ADVANCED_PROGRAMMING_1_FUNCTION_H
+#define ADVANCED_PROGRAMMING_1_FUNCTION_H
+
 #include <iostream>
 #include <cmath>
 #include <vector>
 #include <string>
+#include <sstream>
+#include <fstream>
 using namespace std;
 
-#ifndef ADVANCED_PROGRAMMING_1_FUNCTION_H
-#define ADVANCED_PROGRAMMING_1_FUNCTION_H
+struct ParsedLine {
+    vector<float> features;
+    string label;
+};
+bool isPositiveInteger(char *str);
+bool isFloat(string& str);
+ParsedLine parseInput(string& line, bool hasLabel, char delimiter);
 
 vector <float> check(string input_str, vector <float>& numbers);
 void print_decimal(float q);

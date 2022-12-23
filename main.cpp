@@ -1,31 +1,51 @@
-#include "function.h"
+//Orr, Ariel
+
+#include "main.h"
+
 
 using namespace std;
 
-
-int main()
+int main(int argc, char *argv[])
 {
-    string str1, str2;
-    vector<float> numbers1, numbers2;
-    getline(cin, str1);
-    check(str1, numbers1);
-    getline(cin, str2);
-    check(str2, numbers2);
-    if (numbers1.size() != numbers2.size()) {
-        cout << "inputs should have the same number of numbers" << endl;
-        return -1;
+    if (argc != ARG_SIZE) {
+        cout << "Should have received " << ARG_SIZE << " arguments, but received " << argc << " instead" << endl;
+        exit(-1);
     }
 
-    print_decimal(euclideanDistance(numbers1, numbers2));
-    print_decimal(manhattanDistance(numbers1, numbers2));
-    print_decimal(chebyshevDistance(numbers1, numbers2));
-    if (canberraDistance(numbers1, numbers2) == -1) {
-        cout << "Canberra distance error: cannot divide by zero" << endl;
+    string filename = argv[2];
+    string distanceFuncName = argv[3];
+    
+    int k;
+    if (isPositiveInteger(argv[1])) {
+        k = stoi(argv[1]);
     }
     else {
-        print_decimal(canberraDistance(numbers1, numbers2));
+        cout << "received invalid value for k: " << argv[1] << " (should be a positive integer)" << endl;
+        exit(-1);
     }
-    print_decimal(minkowskiDistance(numbers1, numbers2));
-    return 0;
 
+    readFromFile reader(filename);
+    reader.read();   
+
+    // make sure k value is smaller than the number of samples in given file
+    if (k >= reader.y_train.size())    {
+        cout << "k should be smaller than number of samples" << endl;
+        exit(-1);
+    }
+
+    Knn knn = Knn(k, distanceFuncName, reader.X_train, reader.y_train);
+    
+    string inputVector;
+    struct ParsedLine ret;
+    while (true) {
+        getline(cin, inputVector);
+        ret = parseInput(inputVector, false, ' ');
+        if (ret.features.size() != reader.featuresPerLine) {
+            cout << "input vector should have " << (reader.featuresPerLine) << " elements, separated by spaces." << endl;
+            exit(-1);
+        }
+
+        string prediction = knn.predict(ret.features);
+        cout << prediction << endl;
+    }
 }

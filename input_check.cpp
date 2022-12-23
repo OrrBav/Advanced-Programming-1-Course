@@ -13,7 +13,7 @@ vector <float> check(string input_str, vector <float>& numbers) {
     // finds if first and last char in string are digits, and ensures for loop logic
     if ((isdigit(input_str[0]) == false) || isdigit(input_str[input_str.length() - 1]) == false) {
         cout << "input should be numbers separated by spaces." << endl;
-        exit (0);
+        exit (-1);
     }
     for (int i = 0; i < input_str.length(); i++) {
         if (isdigit(input_str[i]) == true) {
@@ -31,7 +31,7 @@ vector <float> check(string input_str, vector <float>& numbers) {
             if (input_str[i] == ' ') {
                 if (space_flag == true) {
                     cout << "input should be numbers separated by spaces." << endl;
-                    exit (0);
+                    exit (-1);
                 }
                 // prepare for a new valid number
                 else {
@@ -46,7 +46,7 @@ vector <float> check(string input_str, vector <float>& numbers) {
                 // there was already a dot in number
                 if (dot_flag == true) {
                     cout << "input should be numbers separated by spaces." << endl;
-                    exit (0);
+                    exit (-1);
                 }
                 else {
                     dot_flag = true;
@@ -56,7 +56,7 @@ vector <float> check(string input_str, vector <float>& numbers) {
             // invalid char
             else {
                 cout << "input should be numbers separated by spaces." << endl;
-                exit (0);
+                exit (-1);
             }
         }
     }
