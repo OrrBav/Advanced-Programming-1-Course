@@ -21,7 +21,8 @@ int runServer(int port, string csv){
     }
     /* creating the struct for the address */
     struct sockaddr_in server_sin;     /* struct for the address */
-    memset(&server_sin, 0, sizeof (server_sin));  /* It copies a single character for a specified number of times to an object (sin)*/
+    memset(&server_sin, 0, sizeof (server_sin));  /* It copies a single character for a specified number
+    * of times to an object (sin)*/
     server_sin.sin_family = AF_INET;   /* address protocol type */
     server_sin.sin_addr.s_addr = INADDR_ANY; /* const for any address */
     server_sin.sin_port = htons(server_port); /* defines the port */
