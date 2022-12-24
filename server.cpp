@@ -57,7 +57,7 @@ int runServer(int port, string csv){
 
             // classify vector according to file
 
-            //send it back to client
+            //send it back to client.
 
         }
     }
