@@ -30,11 +30,16 @@ int runClient(char* ip_address, int port) {
             perror("error connecting to server");
             exit (-1);
         }
-        /* creating message for server from the user */
+        /* creating message for server from the user.
+         * should perform input checks on it: vector, distanceMat, k*
+         * if invalid, print "invalid input" and continue */
+
+
         char data[] = "im a message";
         // sending the message to the server
 
         int data_len = strlen(data);
+        /* should ensure data_len < buffer> */
         int sent_bytes = send(sock, data, data_len, 0);
         if (sent_bytes < 0) {
             perror("error sending the message");

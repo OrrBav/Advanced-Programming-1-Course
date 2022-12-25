@@ -55,6 +55,7 @@ int runServer(int port, string csv){
             perror("Error");
         } else {
             /* if message is -1 we should close client */
+            /* if message is invalid, return "invalid input" and continue */
 
             // classify vector according to file
 
