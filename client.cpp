@@ -14,6 +14,13 @@
 
 using namespace std;
 
+bool chechPort (int port) {
+    if (port < 1024 || port > 65535) {
+        return false;
+    }
+    return true;
+}
+
 bool checkIP(string str_ip) {
     char single_cut;
     string new_num;
@@ -112,14 +119,17 @@ int main (int argc, char *argv[]) {
         exit(-1);
     }
     /* extract ip from arvg, and perform input checks on it. */
-    const char* ip = argv[1];
+    char* ip = argv[1];     /* should be const? */
     string check_ip = ip;
     if (!checkIP(check_ip)) {
         cout << "invalid ip address.";
         exit(-1);
     }
-    // should extract port from argv, and perform input checks on it
-
+    /* should extract port from argv, and perform input checks on it */
     int port = atoi(argv[2]);
-
+    if (!chechPort(port)) {
+        cout << "invalid port address";
+        exit(-1);
+    }
+    runClient(ip, port);
 }
