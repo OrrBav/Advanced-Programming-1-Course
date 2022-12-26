@@ -9,8 +9,52 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <string>
+#include <vector>
 
 using namespace std;
+
+bool checkIP(string str_ip) {
+    char single_cut;
+    string new_num;
+    int dot_count = 0;
+    vector <int> ipNumbers;
+    for (int i = 0; i < str_ip.length(); i++) {
+        if (isdigit(str_ip[i])) {
+            /* converts input_srt[i] from char to string, and enables stoi check */
+            single_cut = str_ip[i];
+            string string_cut{ single_cut };
+            new_num += string_cut;
+        }
+            /* char is not a digit: can only be a dot. */
+        else {
+            if (str_ip[i] == '.') {
+                dot_count++;
+                /* more than 3 digits are invalid ip address. */
+                if (new_num.length() > 3) {
+                    return false;
+                }
+                ipNumbers.push_back(stoi(new_num));
+                new_num = "";
+            }
+                /* invalid char: not a digit or a dot. */
+            else {
+                return false;
+            }
+        }
+    }
+    /* we check new_num length again for the last octate in the ip address. */
+    if (dot_count != 3 || new_num.length() > 3) {
+        return false;
+    }
+    ipNumbers.push_back(stoi(new_num));
+    for (int i = 0; i < ipNumbers.size(); i++) {
+        if (ipNumbers[i] < 0 || ipNumbers[i] > 255) {
+            return false;
+        }
+    }
+    return true;
+}
 
 int runClient(char* ip_address, int port) {
     while (true) {      /* client was instructed to loop infinitely */
@@ -62,11 +106,22 @@ int runClient(char* ip_address, int port) {
 }
 
 int main (int argc, char *argv[]) {
-    // should extract ip from arvg, and perform input checks on it
-
+    /* maybe const ARGC like in main.cpp */
+    if (argc != 3) {
+        cout << "Should have received " << 3 << " arguments, but received " << argc << " instead" << endl;
+        exit(-1);
+    }
+    /* extract ip from arvg, and perform input checks on it. */
+    const char* ip = argv[1];
+    string check_ip = ip;
+    if (!checkIP(check_ip)) {
+        cout << "invalid ip address.";
+        exit(-1);
+    }
     // should extract port from argv, and perform input checks on it
 
-    const char* ip = argv[1];
+
+
     int port = atoi(argv[2]);
 
 }
