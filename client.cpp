@@ -120,8 +120,6 @@ int main (int argc, char *argv[]) {
     }
     // should extract port from argv, and perform input checks on it
 
-
-
     int port = atoi(argv[2]);
 
 }
