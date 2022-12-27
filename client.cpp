@@ -1,6 +1,3 @@
-//
-// Created by orrbb on 24/12/2022.
-//
 
 #include <iostream>
 #include <sys/socket.h>
@@ -14,7 +11,7 @@
 
 using namespace std;
 
-bool chechPort (int port) {
+bool checkPort (int port) {
     if (port < 1024 || port > 65535) {
         return false;
     }
@@ -127,7 +124,7 @@ int main (int argc, char *argv[]) {
     }
     /* should extract port from argv, and perform input checks on it */
     int port = atoi(argv[2]);
-    if (!chechPort(port)) {
+    if (!checkPort(port)) {
         cout << "invalid port address";
         exit(-1);
     }

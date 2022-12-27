@@ -1,6 +1,4 @@
-//
-// Created by orrbb on 24/12/2022.
-//
+
 #include <iostream>
 #include <sys/socket.h>
 #include <stdio.h>
@@ -54,7 +52,7 @@ int runServer(int port, string csv){
         int read_bytes = recv(client_sock, messageBuffer, expected_data_len, 0); /* recieve a message from the clients
         * socket into the buffer. */
         if (read_bytes == 0) {
-            perror("Connection is closes");
+            perror("Connection is closed");
         } else if (read_bytes < 0) {
             perror("Error");
         } else {
