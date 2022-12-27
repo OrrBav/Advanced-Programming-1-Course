@@ -8,6 +8,10 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <string>
+#include <vector>
+#include "knn.h"
+#include "readFromFile.h"
 
 using namespace std;
 
@@ -58,7 +62,31 @@ int runServer(int port, string csv){
             /* if message is invalid, return "invalid input" and continue */
 
             // classify vector according to file
+            // assuming vector is valid and classifies into vector, distance and k
+            bool isValidInput = true;       /* helps to send back to client appropriate message, if input is invalid. */
+            vector <float> inputVector = {1,2,3,4};
+            string distanceMatric = "MAN";
+            int k = 3;
+            readFromFile reader(csv);
+            reader.read();
+            /* Should perform input check on k (<= .y_train.size) and inputVector (= reader.featuresPerLine).
+             * This is the only place we can check it!*/
+            /* make sure k value is smaller than the number of samples in given file. */
+            if (k >= reader.y_train.size())    {
+                cout << "k should be smaller than number of samples" << endl;
+                isValidInput = false;
+                //exit(-1);
+            }
+            if (inputVector.size() != reader.featuresPerLine) {
+                cout << "input vector should have " << (reader.featuresPerLine)
+                << " elements, separated by spaces." << endl;
+                isValidInput = false;
+                //exit(-1);
+            }
 
+            if (!isValidInput) { /* client sent an invalid input, we should inform him. */
+                // send back: "invalid input".
+            }
             //send it back to client.
 
         }
