@@ -1,6 +1,3 @@
-//
-// Created by orrbb on 14/12/2022.
-//
 
 #ifndef ADVANCED_PROGRAMMING_1_MAIN_H
 #define ADVANCED_PROGRAMMING_1_MAIN_H
