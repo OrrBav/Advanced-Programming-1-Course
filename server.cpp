@@ -13,6 +13,22 @@
 
 using namespace std;
 
+/* checks that input port is valid
+*/
+bool checkPort (char *port, string portNum) {
+    int temp;
+        if (isPositiveInteger(port)) {
+            temp = stoi(portNum);
+            if (1024 < temp < 65535) {
+                return true;
+            }
+        }
+        else {
+           return false;
+        }
+}
+
+
 int runServer(int port, string csv){
     const int server_port = port;
     /*socket creation, sock_stream is a const for TCP */
@@ -49,7 +65,7 @@ int runServer(int port, string csv){
         }
         char messageBuffer[4096]; /* creates a buffer for the client */
         int expected_data_len = sizeof (messageBuffer); /* maximum length of received data */
-        int read_bytes = recv(client_sock, messageBuffer, expected_data_len, 0); /* recieve a message from the clients
+        int read_bytes = recv(client_sock, messageBuffer, expected_data_len, 0); /* receive a message from the clients
         * socket into the buffer. */
         if (read_bytes == 0) {
             perror("Connection is closed");
@@ -95,12 +111,31 @@ int runServer(int port, string csv){
     return 0;
 }
 
+/* extract port number and csv file from argv and perform input checks on them
+    */
 int main (int argc, char *argv[]) {
-    // should extract csv from arvg, and perform input checks on it
+    
+    if (argc != 3) {
+    cout << "Should have received " << 3 << " arguments, but received " << argc << " instead" << endl;
+    exit(-1);
+    }
 
-    // should extract port from argv, and perform input checks on it
-
-    string cvs = argv[1];
-    int port = atoi(argv[2]);
-
+    string filename = argv[1];
+    // check input csv file is valid
+    readFromFile reader(filename);
+    reader.read();
+    // ...
+    
+    // check input port is valid
+    string p = argv[2]; 
+    if (!checkPort(argv[2],p)) {
+        cout << "invalid port address" << endl;
+        exit(-1);
+    }
+  
+    // TODO:
+    // maybe should send X_train and y_train instead of file name???
+    // x and y train are initialized only after they went through all the input checks..
+    runServer(stoi(p),filename);
+ 
 }
