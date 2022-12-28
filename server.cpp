@@ -67,6 +67,10 @@ int runServer(int port, string csv){
         int expected_data_len = sizeof (messageBuffer); /* maximum length of received data */
         int read_bytes = recv(client_sock, messageBuffer, expected_data_len, 0); /* receive a message from the clients
         * socket into the buffer. */
+
+        // "vector distance k" splits to "vector", 'distance" ,"k"
+        // example : "4 5.6 4.2 1 MAN 3" --> (4, 5.6, 4.2, 1) , "MAN", 3
+
         if (read_bytes == 0) {
             perror("Connection is closed");
         } else if (read_bytes < 0) {
@@ -75,6 +79,7 @@ int runServer(int port, string csv){
             /* if message is -1 we should close client */
             /* if message is invalid, return "invalid input" and continue */
 
+            // ***************************************************************************************************
             // classify vector according to file
             // assuming vector is valid and classifies into vector, distance and k
             bool isValidInput = true;       /* helps to send back to client appropriate message, if input is invalid. */
@@ -124,6 +129,7 @@ int main (int argc, char *argv[]) {
     // check input csv file is valid
     readFromFile reader(filename);
     reader.read();
+    
     // ...
     
     // check input port is valid
