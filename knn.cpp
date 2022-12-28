@@ -4,7 +4,7 @@
 
 #include "knn.h"
 
-/*
+/**
  * Constructor for knn class.
  * @param k - integer, number of neighbors we wil use in the KNN algorithm.
  * @param funcName - a string representation of the distance function KNN class will use in its calculations.
@@ -18,7 +18,7 @@ Knn::Knn(int k, string funcName, vector<vector<float>> &x_vector, vector <string
     y_train = y_vector;
 }
 
-/*
+/**
  * main function of KNN class. will get the x_test vector, and will compute distance for each row (or sample) in
  * x_train. it will save it in a vector of pairs predictVector, where each distance will have the corresponding label.
  * @param x_test - vector of floats we wish to determine its label. User's input from main.
@@ -37,7 +37,7 @@ string Knn::predict (vector <float> x_test ) {
     return Knn::commonLabel(predictVector);
 }
 
-/*
+/**
  * function will get predictVector, initialized in predict function, and will determine the most common label from the
  * K values it holds. For that end, we will create a predictMap, which will hold label and its total appearances in
  * predictVector.

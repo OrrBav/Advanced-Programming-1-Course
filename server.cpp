@@ -14,7 +14,15 @@
 #include "readFromFile.h"
 
 using namespace std;
-
+/**
+ * function creates and runs a server, according to its initialized port. It first creates a socket, binds it,
+ * and than endlessly listens to input from clients.
+ * If the message from client is valid, the server will classify it using KNN algorithm, implemented in previous
+ * exercise, and will return to the client the a string classification, according to the CSV file.
+ * @param port - port of the server.
+ * @param csv - csv file we will train knn on.
+ * @return
+ */
 int runServer(int port, string csv){
     const int server_port = port;
     /*socket creation, sock_stream is a const for TCP */
@@ -43,7 +51,7 @@ int runServer(int port, string csv){
     while (true) {      /* we were instructed not to close the server. */
         struct sockaddr_in client_sin; /* address struct for the sender info */
         unsigned int addr_len = sizeof (client_sin);
-        int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len); /* accept creates a nre socket
+        int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len); /* accept creates a new socket
         * for the connecting client */
         if (client_sock < 0) {
             perror("Error accepting client");
@@ -61,37 +69,40 @@ int runServer(int port, string csv){
             /* if message is -1 we should close client */
             /* if message is invalid, return "invalid input" and continue */
 
+            /**********************************************************************************/
             // classify vector according to file
             // assuming vector is valid and classifies into vector, distance and k
-            bool isValidInput = true;       /* helps to send back to client appropriate message, if input is invalid. */
             vector <float> inputVector = {1,2,3,4};
             string distanceMatric = "MAN";
             int k = 3;
             readFromFile reader(csv);
             reader.read();
+            string prediction;
             /* Should perform input check on k (<= .y_train.size) and inputVector (= reader.featuresPerLine).
              * This is the only place we can check it!*/
             /* make sure k value is smaller than the number of samples in given file. */
-            if (k >= reader.y_train.size())    {
+            if (k >= reader.y_train.size()) {
                 cout << "k should be smaller than number of samples" << endl;
-                isValidInput = false;
+                prediction = "invalid input";
                 //exit(-1);
-            }
-            if (inputVector.size() != reader.featuresPerLine) {
+            } else if (inputVector.size() != reader.featuresPerLine) {
                 cout << "input vector should have " << (reader.featuresPerLine)
                 << " elements, separated by spaces." << endl;
-                isValidInput = false;
+                prediction = "invalid input";
                 //exit(-1);
+            } else {        /* valid input from user */
+                Knn knn = Knn(k, distanceMatric, reader.X_train, reader.y_train);
+                prediction = knn.predict(inputVector);
             }
-
-            if (!isValidInput) { /* client sent an invalid input, we should inform him. */
-                // send back: "invalid input".
+            char* sendMessage = &prediction[0];     /* knn returns a string, and send receives a char[] */
+            int sizeOfMessage = sizeof (sendMessage);   /* maximum length of received data */
+            /* send the prediction back to client. */
+            int sent_bytes = send(client_sock,sendMessage, sizeOfMessage, 0);
+            if (sent_bytes < 0) {
+                cout << "error sending to client.";
             }
-            //send it back to client.
-
         }
     }
-
     /* closes the server socket */
     close(sock);
     return 0;
