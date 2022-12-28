@@ -29,7 +29,7 @@ bool checkPort (char *port, string portNum) {
 }
 
 
-int runServer(int port, string csv){
+int runServer(int port, readFromFile reader){
     const int server_port = port;
     /*socket creation, sock_stream is a const for TCP */
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -126,11 +126,9 @@ int main (int argc, char *argv[]) {
     }
 
     string filename = argv[1];
-    // check input csv file is valid
+    // check input csv file is valid and extract all its data
     readFromFile reader(filename);
     reader.read();
-    
-    // ...
     
     // check input port is valid
     string p = argv[2]; 
@@ -142,6 +140,6 @@ int main (int argc, char *argv[]) {
     // TODO:
     // maybe should send X_train and y_train instead of file name???
     // x and y train are initialized only after they went through all the input checks..
-    runServer(stoi(p),filename);
+    runServer(stoi(p),reader);
  
 }
