@@ -9,6 +9,7 @@ vector<string> splitString(string str, char delim) {
     string word;
     // split every 'delim' and insert each str to 'words' vector
     while (getline(iss, word, delim)) {
+        cout << "current word: " << word << endl;  // TEST
         words.push_back(word);
     }
     return words;
@@ -18,6 +19,13 @@ vector<string> splitString(string str, char delim) {
     parsing the input data into vector, distance metric, k, and validates each one  */
 bool checkInputData(string data) {
     vector<string> words = splitString(data, ' ');
+
+    cout << "parsed data (words): " << endl;  // TEST
+    for (int i = 0; i < words.size(); i++)    {  // TEST
+        cout <<  words[i];
+    }
+    cout << endl; // TEST
+
     
     // minimal input data size is 3 (e.g. "3 MAN 7"). less than that is invalid
     if (words.size() < 3) {
@@ -26,19 +34,32 @@ bool checkInputData(string data) {
 
     // splitting the data into vector, distance metric, k
     string kInput = words.back();
+    cout << "kInput: " << kInput << endl; // TEST
     words.pop_back();
     string distanceInput = words.back();
+    cout << "distanceInput: " << distanceInput << endl; // TEST
     words.pop_back();
     // after popping k and distance, the rest is just the vector
     vector<string> vecFloatInputs = words;
+    cout << "parsed data (vecFloatInputs): ";  // TEST
+    for (int i = 0; i < vecFloatInputs.size(); i++)    {  // TEST
+        cout <<  vecFloatInputs[i];
+    }
+    cout << endl; // TEST
+
 
     // check input k
     if (!isPositiveInteger(kInput.c_str())) {
-       return false;
+        cout << "kInput.c_str(): " << kInput.c_str() << endl; // TEST
+        cout << "kInput.c_str() type: " << typeid(kInput.c_str()).name() << endl; // TEST
+        cout << "isPositiveInteger returns false" << endl; // TEST
+
+        return false;
     }
 
     // check input distance metric
     if (!checkDistanceInput(distanceInput)) {
+        cout << "checkDistanceInput returns false" << endl; // TEST
         return false;
     }
     
@@ -46,6 +67,7 @@ bool checkInputData(string data) {
     // 'auto' type is vector<string>::iterator
     for (auto iter = vecFloatInputs.begin(); iter != vecFloatInputs.end(); ++iter) {
         if (!isFloat(*iter)) {
+            cout << "check input vector returns false" << endl; // TEST
             return false;
         }
     }
@@ -55,7 +77,7 @@ bool checkInputData(string data) {
 
 
 bool checkDistanceInput(string inputDistance) {
-    if (inputDistance != "AUC" && inputDistance != "MAN" && inputDistance == "CHB" &&
+    if (inputDistance != "AUC" && inputDistance != "MAN" && inputDistance != "CHB" &&
         inputDistance != "CAN" && inputDistance != "MIN" ) {
         return false;
     }
@@ -80,18 +102,24 @@ bool checkPort (string portNum) {
 /*  checks that the given string holds a valid and positive integer. 
     receives a pointer to the beginning of the string and checks char after char    */
 bool isPositiveInteger(const char *str) {
-    if (*str == '\0') 
+    cout << "str in isPositiveInteger:" << str << endl;  // TEST
+    if (*str == '\0') {
+        cout << "fail 1" << endl;  // TEST
         return false;
-    if (*str == '0')
+    }
+    if (*str == '0') {
+        cout << "fail 2" << endl;  // TEST
         return false;
+    }
     // check char after char in the given string
     while (*str != '\0') {
         if (!isdigit(*str)) {
+            cout << "current *str: " << *str << endl;  // TEST
+            cout << "fail 3" << endl;  // TEST
             return false;
         }
         str++;
     }
-
     return true;
 }
 

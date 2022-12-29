@@ -70,6 +70,7 @@ int runServer(int port, readFromFile& reader){
 
             // receive the message from the clients socket into 'messageBuffer'
             int read_bytes = recv(client_sock, messageBuffer, expected_data_len, 0);
+            cout << "server receive: " << messageBuffer << endl;  // TEST
             if (read_bytes == 0) {
                 perror("Connection is closed");
                 break;  // finish working with this client
@@ -106,12 +107,9 @@ int runServer(int port, readFromFile& reader){
                     /* make sure k value is smaller than the number of samples in given file. */
                     
                     if (k >= reader.y_train.size()) {
-                        cout << "k should be smaller than number of samples" << endl;
                         prediction = "invalid input";
                         //exit(-1);
                     } else if (inputVector.size() != reader.featuresPerLine) {
-                        cout << "input vector should have " << (reader.featuresPerLine)
-                            << " elements, separated by spaces." << endl;
                         prediction = "invalid input";
                         //exit(-1);
                     } else {        /* valid input from user */
@@ -125,6 +123,7 @@ int runServer(int port, readFromFile& reader){
                 
                 int sizeOfMessage = sendMessage.size();
                 // send the prediction/message back to client. ( c_str converts string into char* )
+                cout << "server send: " << sendMessage << endl;  // TEST
                 int sent_bytes = send(client_sock, sendMessage.c_str(), sizeOfMessage, 0);
                 if (sent_bytes < 0) {
                     cout << "error sending to client." << endl;
@@ -160,5 +159,4 @@ int main (int argc, char *argv[]) {
     }
 
     runServer(stoi(port),reader);
-
 }
