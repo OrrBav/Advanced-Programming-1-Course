@@ -9,22 +9,11 @@
 #include <string>
 #include <vector>
 #include "readFromFile.h"
+#include "function.h"
 
 using namespace std;
 
-bool checkPort (char *port, string portNum) {
-    int temp;
-        if (isPositiveInteger(port)) {
-            temp = stoi(portNum);
-            if (1024 < temp < 65535) {
-                return true;
-            }
-        }
-        else {
-           return false;
-        }
-}
-
+// i would move it to helperFunctions......
 bool checkIP(string str_ip) {
     char single_cut;
     string new_num;
@@ -67,92 +56,50 @@ bool checkIP(string str_ip) {
     return true;
 }
 
-int runClient(char* ip_address, int port) {
-    while (true) {      /* client was instructed to loop infinitely */
+// runs client side
+void runClient(char* ip_address, int port) {
+    int sock  = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0) {
+        perror("error creating socket");
+        exit(-1);
+    }
 
+    /* creating the struct for the address */
+    struct sockaddr_in client_sin;      /* struct for the address */
+    memset(&client_sin, 0, sizeof (client_sin)); /* It copies a single character for a specified number
+    * of times to an object (sin)*/
+    client_sin.sin_family = AF_INET;    /* address protocol type */
+    client_sin.sin_addr.s_addr = inet_addr(ip_address);    /* ip address of client */
+    client_sin.sin_port = htons(port);   /* address port */
+    if (connect (sock, (struct sockaddr *) &client_sin, sizeof(client_sin)) < 0 ) {
+        perror("error connecting to server");
+        exit (-1);
+    }
+
+    // client runs in a loop infinitely until stopped
+    while (true) {
         // get data input ("vector distance k") from the user
         string data;
         getline(cin, data);
-
-        // check the data is valid. data = "vector distance k"
-        // "vector distance k" splits to "vector", 'distance" ,"k"
-        // example : "4 5.6 4.2 1 MAN 3" --> (4, 5.6, 4.2, 1) , "MAN", 3
-
-        // parse input data into vector, distance metric, k
-        // receives a pointer to the beginning of the data string and checks char after char
-
-        bool parseInputData(char *str) {
-            // check data is not empty
-            if (*str == '\0')
-                return false;
-            if (*str == '0')
-                return false;
-            string inputVector;
-
-            // check char after char in the given string
-            while (*str != '\0') {
-                // concatenating the current char (number, space or a dot) to the vector
-                if (isdigit(*str) || (*str == " " || ".")) {
-                    inputVector = inputVector + *str;
-                }
-                str++;
-            }
-            // .... TODO: fix
-            return true;
+        
+        // if user input is "-1" we close the client
+        if (data == "-1") {
+            break;
         }
 
-
-        // check input vector
-
-
-        // check input distance metric
-        string inputDistance;
-        if (inputDistance != "AUC" && inputDistance != "MAN" && inputDistance == "CHB" &&
-            inputDistance != "CAN" && inputDistance != "MIN" ) {
-            cout << "received invalid distance metric (should be AUC/MAN/CHB/CAN/MIN)" << endl;
-            exit(-1);
+        // perform input checks on user input to make sure the vector, distance metric and k are valid
+        // i.e. vector holds numbers separated by spaces, distance metric is one of our options, and k is integer>0
+        // if invalid continue to next new input from user
+        if(!checkInputData(data)) {
+            cout << "invalid input" << endl;
+            continue;
         }
 
-        // check input k
-        string inputK;
-        int k;
-        if (isPositiveInteger(inputK)) {
-        k = stoi(inputK);
-        }
-        else {
-            cout << "received invalid value for k: " << inputK << " (should be a positive integer)" << endl;
-            exit(-1);
-        }
-
-
-        int sock  = socket(AF_INET, SOCK_STREAM, 0);
-        if (sock < 0) {
-            perror("error creating socket");
-            exit(-1);
-        }
-
-        /* creating the struct for the address */
-        struct sockaddr_in client_sin;      /* struct for the address */
-        memset(&client_sin, 0, sizeof (client_sin)); /* It copies a single character for a specified number
-        * of times to an object (sin)*/
-        client_sin.sin_family = AF_INET;    /* address protocol type */
-        client_sin.sin_addr.s_addr = inet_addr(ip_address);    /* ip address of client */
-        client_sin.sin_port = htons(port);   /* address port */
-        if (connect (sock, (struct sockaddr *) &client_sin, sizeof(client_sin)) < 0 ) {
-            perror("error connecting to server");
-            exit (-1);
-        }
-        /* creating message for server from the user.
-         * should perform input checks on it: vector, distanceMat, k*
-         * if invalid, print "invalid input" and continue */
-
-
-        //char data[] = "im a message";
-        // sending the message to the server
-
-        int data_len = strlen(data);
-        /* should ensure data_len < buffer> */
-        int sent_bytes = send(sock, data, data_len, 0);
+        int data_len = data.size();
+        // sending the user message to the server
+        /* should ensure data_len < buffer>  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  */
+        // c_str() converts 'data' from string to *char, because 'send' function needs *char
+        int sent_bytes = send(sock, data.c_str(), data_len, 0);
         if (sent_bytes < 0) {
             perror("error sending the message");
             // exit (-1)
@@ -166,20 +113,20 @@ int runClient(char* ip_address, int port) {
             perror("error has occurred");
         } else {
             // printing the message from server. buffer variable holds it
-            // cout << buffer << endl;
+            cout << buffer << endl;
         }
-        // if message/data is -1 -> close the socket
     }
 
+    close(sock);
 }
 
 int main (int argc, char *argv[]) {
-    /* maybe const ARGC like in main.cpp */
+   
     if (argc != 3) {
         cout << "Should have received " << 3 << " arguments, but received " << argc << " instead" << endl;
         exit(-1);
     }
-    /* extract ip from arvg, and perform input checks on it. */
+    // extract ip from argv and perform input checks on it
     char* ip = argv[1];     /* should be const? */
     string check_ip = ip;
     if (!checkIP(check_ip)) {
@@ -188,35 +135,12 @@ int main (int argc, char *argv[]) {
     }
 
     // check input port is valid
-    string p = argv[2];
-    if (!checkPort(argv[2],p)) {
+    string port = argv[2];
+    if (!checkPort(port)) {
         cout << "invalid port address" << endl;
         exit(-1);
     }
 
-    runClient(ip, stoi(p));
+    runClient(ip, stoi(port));
+    return 0;
 }
-/* following code is for input check. Should be further implemented.
-string message = "1 2 3 4 MAN 302";
-string messages[3];
-string distance;
-string k;
-string user = "";
-for (int i = 0; i < message.size(); i++) {
-    if (isalpha(message[i])) {
-        messages[0] = user;
-        for (int j = i; j <= i + 2; j++) {
-            distance = distance + message[j];
-            }
-        messages[1] = distance;
-        for (int l = i + 4; l < message.size(); l++) {
-            k = k + message[l];
-        }
-        messages[2] = k;
-        break;
-        }
-    else {
-        user = user + message[i];
-    }
-}
- */

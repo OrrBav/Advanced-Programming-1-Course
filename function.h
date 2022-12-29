@@ -13,7 +13,11 @@ struct ParsedLine {
     vector<float> features;
     string label;
 };
-bool isPositiveInteger(char *str);
+vector<string> splitString(string str, char delim);
+bool checkDistanceInput(string inputDistance);
+bool checkPort (string portNum);
+bool checkInputData(string data);
+bool isPositiveInteger(const char *str);
 bool isFloat(string& str);
 ParsedLine parseInput(string& line, bool hasLabel, char delimiter);
 

@@ -2,10 +2,84 @@
 
 using namespace std;
 
+// split input string by given delimiter, returns vector<string> of splitted input
+vector<string> splitString(string str, char delim) {
+    vector<string> words;
+    istringstream iss(str);
+    string word;
+    // split every 'delim' and insert each str to 'words' vector
+    while (getline(iss, word, delim)) {
+        words.push_back(word);
+    }
+    return words;
+}
+
+/* checks the given data is valid. data = "vector distanceMetric k"
+    parsing the input data into vector, distance metric, k, and validates each one  */
+bool checkInputData(string data) {
+    vector<string> words = splitString(data, ' ');
+    
+    // minimal input data size is 3 (e.g. "3 MAN 7"). less than that is invalid
+    if (words.size() < 3) {
+        return false;
+    }
+
+    // splitting the data into vector, distance metric, k
+    string kInput = words.back();
+    words.pop_back();
+    string distanceInput = words.back();
+    words.pop_back();
+    // after popping k and distance, the rest is just the vector
+    vector<string> vecFloatInputs = words;
+
+    // check input k
+    if (!isPositiveInteger(kInput.c_str())) {
+       return false;
+    }
+
+    // check input distance metric
+    if (!checkDistanceInput(distanceInput)) {
+        return false;
+    }
+    
+    // check input vector
+    // 'auto' type is vector<string>::iterator
+    for (auto iter = vecFloatInputs.begin(); iter != vecFloatInputs.end(); ++iter) {
+        if (!isFloat(*iter)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+bool checkDistanceInput(string inputDistance) {
+    if (inputDistance != "AUC" && inputDistance != "MAN" && inputDistance == "CHB" &&
+        inputDistance != "CAN" && inputDistance != "MIN" ) {
+        return false;
+    }
+    return true;
+}
+
+// checks that input port is valid
+bool checkPort (string portNum) {
+    int temp;
+        if (isPositiveInteger(portNum.c_str())) {
+            temp = stoi(portNum);
+            if (1024 < temp <= 65535) {
+                return true;
+            }
+        }
+        else {
+           return false;
+        }
+}
+
+
 /*  checks that the given string holds a valid and positive integer. 
-    receives a pointer to the beginning of the string and checks char after char
-*/
-bool isPositiveInteger(char *str) {
+    receives a pointer to the beginning of the string and checks char after char    */
+bool isPositiveInteger(const char *str) {
     if (*str == '\0') 
         return false;
     if (*str == '0')
