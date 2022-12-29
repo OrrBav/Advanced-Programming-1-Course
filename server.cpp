@@ -59,7 +59,7 @@ int runServer(int port, string csv){
         }
         char messageBuffer[4096]; /* creates a buffer for the client */
         int expected_data_len = sizeof (messageBuffer); /* maximum length of received data */
-        int read_bytes = recv(client_sock, messageBuffer, expected_data_len, 0); /* recieve a message from the clients
+        int read_bytes = recv(client_sock, messageBuffer, expected_data_len, 0); /* receive a message from the clients
         * socket into the buffer. */
         if (read_bytes == 0) {
             perror("Connection is closes");
@@ -72,6 +72,7 @@ int runServer(int port, string csv){
             /**********************************************************************************/
             // classify vector according to file
             // assuming vector is valid and classifies into vector, distance and k
+            /* NOTICE!! following variables should be initialized with user's input. */
             vector <float> inputVector = {1,2,3,4};
             string distanceMatric = "MAN";
             int k = 3;
@@ -87,7 +88,7 @@ int runServer(int port, string csv){
                 //exit(-1);
             } else if (inputVector.size() != reader.featuresPerLine) {
                 cout << "input vector should have " << (reader.featuresPerLine)
-                << " elements, separated by spaces." << endl;
+                     << " elements, separated by spaces." << endl;
                 prediction = "invalid input";
                 //exit(-1);
             } else {        /* valid input from user */
@@ -115,5 +116,6 @@ int main (int argc, char *argv[]) {
 
     string cvs = argv[1];
     int port = atoi(argv[2]);
+    runServer(port, cvs);
 
 }
