@@ -83,12 +83,12 @@ int runClient(char* ip_address, int port) {
 
         bool parseInputData(char *str) {
             // check data is not empty
-            if (*str == '\0') 
+            if (*str == '\0')
                 return false;
             if (*str == '0')
                 return false;
             string inputVector;
-            
+
             // check char after char in the given string
             while (*str != '\0') {
                 // concatenating the current char (number, space or a dot) to the vector
@@ -110,7 +110,7 @@ int runClient(char* ip_address, int port) {
         if (inputDistance != "AUC" && inputDistance != "MAN" && inputDistance == "CHB" &&
             inputDistance != "CAN" && inputDistance != "MIN" ) {
             cout << "received invalid distance metric (should be AUC/MAN/CHB/CAN/MIN)" << endl;
-            exit(-1);   
+            exit(-1);
         }
 
         // check input k
@@ -188,7 +188,7 @@ int main (int argc, char *argv[]) {
     }
 
     // check input port is valid
-    string p = argv[2]; 
+    string p = argv[2];
     if (!checkPort(argv[2],p)) {
         cout << "invalid port address" << endl;
         exit(-1);
@@ -196,3 +196,27 @@ int main (int argc, char *argv[]) {
 
     runClient(ip, stoi(p));
 }
+/* following code is for input check. Should be further implemented.
+string message = "1 2 3 4 MAN 302";
+string messages[3];
+string distance;
+string k;
+string user = "";
+for (int i = 0; i < message.size(); i++) {
+    if (isalpha(message[i])) {
+        messages[0] = user;
+        for (int j = i; j <= i + 2; j++) {
+            distance = distance + message[j];
+            }
+        messages[1] = distance;
+        for (int l = i + 4; l < message.size(); l++) {
+            k = k + message[l];
+        }
+        messages[2] = k;
+        break;
+        }
+    else {
+        user = user + message[i];
+    }
+}
+ */

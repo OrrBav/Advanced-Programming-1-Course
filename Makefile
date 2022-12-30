@@ -1,23 +1,38 @@
-a.out: main.o distanceMatric.o helperFunctions.o input_check.o knn.o readFromFile.o
-	g++ main.o distanceMatric.o helperFunctions.o input_check.o knn.o readFromFile.o -o a.out
+# Makefile for running two programs
 
-main.o: main.cpp main.h
-	g++ -std=c++11 -c main.cpp
+# Choose the compiler.
+CC = g++ -std=c++11
+# Have the right clean command.
+ifeq ($(OS),Windows_NT)
+	CLN=del
+else
+	CLN=rm
+endif
 
-distanceMatric.o: distanceMatric.cpp distanceMatric.h
-	g++ -std=c++11 -c distanceMatric.cpp
+BUILD_FILES := mainRun.o
+BUILD_FILES += distanceMatric.o
+BUILD_FILES += helperFunctions.o
+BUILD_FILES += input_check.o
+BUILD_FILES += knn.o
+BUILD_FILES += readFromFile.o
 
-helperFunctions.o: helperFunctions.cpp function.h
-	g++ -std=c++11 -c helperFunctions.cpp
 
-input_check.o: input_check.cpp function.h
-	g++ -std=c++11 -c input_check.cpp
+all: $(BUILD_FILES) server.o client.o
+	$(CC) $(BUILD_FILES) server.o -o server.out
+	$(CC) $(BUILD_FILES) client.o -o client.out
 
-knn.o: knn.cpp knn.h
-	g++ -std=c++11 -c knn.cpp
+run: $(BUILD_FILES) server.o client.o
+	$(CC) $(BUILD_FILES) server.o -o server.out & $(CC) $(BUILD_FILES) client.o -o client.out
 
-readFromFile.o: readFromFile.cpp readFromFile.h
-	g++ -std=c++11 -c readFromFile.cpp
+# Build the algs folder
+%.o: %.cpp %.h
+	$(CC) -c -o $@ $<
 
+server.o: Server.cpp
+	$(CC) -c -o server.o Server.cpp
+client.o: Client.cpp
+	$(CC) -c -o client.o Client.cpp
+
+# Clean command
 clean:
-	rm *.o a.out
+	$(CLN) *.o server.out client.out
