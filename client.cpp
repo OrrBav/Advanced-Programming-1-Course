@@ -8,14 +8,21 @@
 #include <string.h>
 #include <string>
 #include <vector>
+#include "readFromFile.h"
 
 using namespace std;
 
-bool checkPort (int port) {
-    if (port < 1024 || port > 65535) {
-        return false;
-    }
-    return true;
+bool checkPort (char *port, string portNum) {
+    int temp;
+        if (isPositiveInteger(port)) {
+            temp = stoi(portNum);
+            if (1024 < temp < 65535) {
+                return true;
+            }
+        }
+        else {
+           return false;
+        }
 }
 
 bool checkIP(string str_ip) {
@@ -62,11 +69,68 @@ bool checkIP(string str_ip) {
 
 int runClient(char* ip_address, int port) {
     while (true) {      /* client was instructed to loop infinitely */
+
+        // get data input ("vector distance k") from the user
+        string data;
+        getline(cin, data);
+
+        // check the data is valid. data = "vector distance k"
+        // "vector distance k" splits to "vector", 'distance" ,"k"
+        // example : "4 5.6 4.2 1 MAN 3" --> (4, 5.6, 4.2, 1) , "MAN", 3
+
+        // parse input data into vector, distance metric, k
+        // receives a pointer to the beginning of the data string and checks char after char
+
+        bool parseInputData(char *str) {
+            // check data is not empty
+            if (*str == '\0') 
+                return false;
+            if (*str == '0')
+                return false;
+            string inputVector;
+            
+            // check char after char in the given string
+            while (*str != '\0') {
+                // concatenating the current char (number, space or a dot) to the vector
+                if (isdigit(*str) || (*str == " " || ".")) {
+                    inputVector = inputVector + *str;
+                }
+                str++;
+            }
+            // .... TODO: fix
+            return true;
+        }
+
+
+        // check input vector
+
+
+        // check input distance metric
+        string inputDistance;
+        if (inputDistance != "AUC" && inputDistance != "MAN" && inputDistance == "CHB" &&
+            inputDistance != "CAN" && inputDistance != "MIN" ) {
+            cout << "received invalid distance metric (should be AUC/MAN/CHB/CAN/MIN)" << endl;
+            exit(-1);   
+        }
+
+        // check input k
+        string inputK;
+        int k;
+        if (isPositiveInteger(inputK)) {
+        k = stoi(inputK);
+        }
+        else {
+            cout << "received invalid value for k: " << inputK << " (should be a positive integer)" << endl;
+            exit(-1);
+        }
+
+
         int sock  = socket(AF_INET, SOCK_STREAM, 0);
         if (sock < 0) {
             perror("error creating socket");
             exit(-1);
         }
+
         /* creating the struct for the address */
         struct sockaddr_in client_sin;      /* struct for the address */
         memset(&client_sin, 0, sizeof (client_sin)); /* It copies a single character for a specified number
@@ -83,7 +147,7 @@ int runClient(char* ip_address, int port) {
          * if invalid, print "invalid input" and continue */
 
 
-        char data[] = "im a message";
+        //char data[] = "im a message";
         // sending the message to the server
 
         int data_len = strlen(data);
@@ -122,11 +186,13 @@ int main (int argc, char *argv[]) {
         cout << "invalid ip address.";
         exit(-1);
     }
-    /* should extract port from argv, and perform input checks on it */
-    int port = atoi(argv[2]);
-    if (!checkPort(port)) {
-        cout << "invalid port address";
+
+    // check input port is valid
+    string p = argv[2]; 
+    if (!checkPort(argv[2],p)) {
+        cout << "invalid port address" << endl;
         exit(-1);
     }
-    runClient(ip, port);
+
+    runClient(ip, stoi(p));
 }
