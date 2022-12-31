@@ -56,7 +56,11 @@ bool checkIP(string str_ip) {
     return true;
 }
 
-// runs client side
+/**
+ * this function will run client side of TCP communication, using the ip and port provided by user.
+ * @param ip_address - ip address of the servet we want to connect.
+ * @param port - the port of the server.
+ */
 void runClient(char* ip_address, int port) {
     int sock  = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
@@ -76,20 +80,20 @@ void runClient(char* ip_address, int port) {
         exit (-1);
     }
 
-    // client runs in a loop infinitely until stopped
+    /* client runs in a loop infinitely until stopped */
     while (true) {
-        // get data input ("vector distance k") from the user
+        /* get data input ("vector distance k") from the user */
         string data;
         getline(cin, data);
-        
-        // if user input is "-1" we close the client
+
+        /* if user input is "-1" we close the client */
         if (data == "-1") {
             break;
         }
 
-        // perform input checks on user input to make sure the vector, distance metric and k are valid
-        // i.e. vector holds numbers separated by spaces, distance metric is one of our options, and k is integer>0
-        // if invalid continue to next new input from user
+        /* perform input checks on user input to make sure the vector, distance metric and k are valid
+        * i.e. vector holds numbers separated by spaces, distance metric is one of our options, and k is integer>0
+        * if invalid continue to next new input from user */
         if(!checkInputData(data)) {
             cout << "user invalid input: " << data << endl;  // TEST
             cout << "invalid input" << endl;
@@ -102,16 +106,18 @@ void runClient(char* ip_address, int port) {
         // c_str() converts 'data' from string to *char, because 'send' function needs *char
 
         cout << "client send: " << data << endl;  // TEST
-
+//        data += '\0';
+//        char * sentdata = &data[0];
         int sent_bytes = send(sock, data.c_str(), data_len, 0);
         if (sent_bytes < 0) {
+            /* if we couldn't send the message, an error has occurred. We should try again. */
             perror("error sending the message");
             // exit (-1)
         }
         char buffer[4096];
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(sock, buffer, expected_data_len, 0);
-        
+
         cout << "client receive: " << buffer << endl;  // TEST
 
         if (read_bytes == 0) {
@@ -119,11 +125,11 @@ void runClient(char* ip_address, int port) {
         } else if (read_bytes < 0) {
             perror("error has occurred");
         } else {
-            // printing the message from server. buffer variable holds it
+            /* printing the message from server. buffer variable holds it. */
             cout << buffer << endl;
         }
-    }
 
+    }
     close(sock);
 }
 

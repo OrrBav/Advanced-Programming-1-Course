@@ -66,6 +66,7 @@ int runServer(int port, readFromFile& reader){
         // now "work" only with this client 
         while (true) {
             char messageBuffer[4096]; // creates a buffer to receive the message from the client
+            cout << "buffer: " << messageBuffer << endl;
             int expected_data_len = sizeof (messageBuffer); /* maximum length of received data */
 
             // receive the message from the clients socket into 'messageBuffer'
@@ -77,11 +78,16 @@ int runServer(int port, readFromFile& reader){
             } else if (read_bytes < 0) {
                 perror("Error");
                 break;  // finish working with this client
-            } else {                                
-                string sendMessage;
+            } else {
+
+                messageBuffer[read_bytes] = '\0'; // Null-terminate the message
+
+                string check(messageBuffer);
+                string prediction;
                 // if message received from client is invalid, return "invalid input" and continue
                 if (!checkInputData(messageBuffer)) {
-                    sendMessage = "invalid input";
+                    cout << check << endl;
+                    prediction = "invalid input: server";
                 }
                 else {
                     // split tne received buffer
@@ -93,38 +99,38 @@ int runServer(int port, readFromFile& reader){
                     string distanceMatric = words.back();
                     words.pop_back();
                     vector<float> inputVector;
-                    // by now only "the vector" is in words
-                    // for each number in words.....
+                    /* by now only "numbers vector" is in words object.
+                    * for each number in words: */
                     for (string& str : words) {
                         float feature = stof(str);
                         inputVector.push_back(feature);
                     }             
 
-                    string prediction;
 
                     /* Should perform input check on k (<= .y_train.size) and inputVector (= reader.featuresPerLine).
                     * This is the only place we can check it!*/
                     /* make sure k value is smaller than the number of samples in given file. */
                     
                     if (k >= reader.y_train.size()) {
-                        prediction = "invalid input";
-                        //exit(-1);
+                        prediction = "invalid input: k";
                     } else if (inputVector.size() != reader.featuresPerLine) {
-                        prediction = "invalid input";
-                        //exit(-1);
+                        prediction = "invalid input: vector";
                     } else {        /* valid input from user */
                         Knn knn = Knn(k, distanceMatric, reader.X_train, reader.y_train);
                         prediction = knn.predict(inputVector);
                     }
 
                     // knn returns a string, and send receives a char[]
-                    sendMessage = &prediction[0];
+                    /* no reason to use is. should delete at the end.
+                    sendMessage = &prediction[0]; */
                 }
-                
-                int sizeOfMessage = sendMessage.size();
+                char* sendMessage = &prediction[0];
+                int sizeOfMessage = prediction.size();      /* alternative to .c_str(); */
                 // send the prediction/message back to client. ( c_str converts string into char* )
                 cout << "server send: " << sendMessage << endl;  // TEST
-                int sent_bytes = send(client_sock, sendMessage.c_str(), sizeOfMessage, 0);
+                int sent_bytes = send(client_sock, prediction.c_str(), prediction.size() + 1, 0); /* +1 for null
+                * terminated char! */
+                //int sent_bytes = send(client_sock, sendMessage, sizeOfMessage + 1, 0);
                 if (sent_bytes < 0) {
                     cout << "error sending to client." << endl;
                 }

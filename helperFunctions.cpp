@@ -9,7 +9,7 @@ vector<string> splitString(string str, char delim) {
     string word;
     // split every 'delim' and insert each str to 'words' vector
     while (getline(iss, word, delim)) {
-        cout << "current word: " << word << endl;  // TEST
+//        cout << "current word: " << word << endl;  // TEST
         words.push_back(word);
     }
     return words;
@@ -20,35 +20,54 @@ vector<string> splitString(string str, char delim) {
 bool checkInputData(string data) {
     vector<string> words = splitString(data, ' ');
 
-    cout << "parsed data (words): " << endl;  // TEST
-    for (int i = 0; i < words.size(); i++)    {  // TEST
-        cout <<  words[i];
-    }
-    cout << endl; // TEST
+//    cout << "parsed data (words): " << endl;  // TEST
+//    for (int i = 0; i < words.size(); i++)    {  // TEST
+//        cout <<  words[i];
+//    }
+//    cout << endl; // TEST
 
-    
+
     // minimal input data size is 3 (e.g. "3 MAN 7"). less than that is invalid
     if (words.size() < 3) {
+        cout << "words size < 3";
         return false;
     }
 
     // splitting the data into vector, distance metric, k
     string kInput = words.back();
-    cout << "kInput: " << kInput << endl; // TEST
+//    cout << "kInput: " << kInput << endl; // TEST
     words.pop_back();
     string distanceInput = words.back();
-    cout << "distanceInput: " << distanceInput << endl; // TEST
+//    cout << "distanceInput: " << distanceInput << endl; // TEST
     words.pop_back();
     // after popping k and distance, the rest is just the vector
     vector<string> vecFloatInputs = words;
-    cout << "parsed data (vecFloatInputs): ";  // TEST
-    for (int i = 0; i < vecFloatInputs.size(); i++)    {  // TEST
-        cout <<  vecFloatInputs[i];
+//    cout << "parsed data (vecFloatInputs): ";  // TEST
+//    for (int i = 0; i < vecFloatInputs.size(); i++)    {  // TEST
+//        cout <<  vecFloatInputs[i];
+//    }
+//    cout << endl; // TEST
+
+
+    /* ORR's check input k
+    if (kInput.empty()) {
+        cout << "invalid k value 1" << endl;
+        return false;
     }
-    cout << endl; // TEST
+
+    for (char c : kInput) {
+        if (!isdigit(c)) {
+            cout << "invalid k value 2: " << c << endl;
+            return false;
+        }
+    }
+    int k = stoi(kInput);
+    if (k < 1) {
+        cout << "invalid k value 3" << endl;
+        return false;
+    } */
 
 
-    // check input k
     if (!isPositiveInteger(kInput.c_str())) {
         cout << "kInput.c_str(): " << kInput.c_str() << endl; // TEST
         cout << "kInput.c_str() type: " << typeid(kInput.c_str()).name() << endl; // TEST

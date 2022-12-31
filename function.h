@@ -16,6 +16,7 @@ struct ParsedLine {
 vector<string> splitString(string str, char delim);
 bool checkDistanceInput(string inputDistance);
 bool checkPort (string portNum);
+bool checkIP(string str_ip);
 bool checkInputData(string data);
 bool isPositiveInteger(const char *str);
 bool isFloat(string& str);
