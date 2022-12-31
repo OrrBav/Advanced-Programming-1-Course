@@ -13,7 +13,7 @@
 
 using namespace std;
 
-// i would move it to helperFunctions......
+// TODO: maybe move it to helperFunctions
 bool checkIP(string str_ip) {
     char single_cut;
     string new_num;
@@ -91,14 +91,18 @@ void runClient(char* ip_address, int port) {
         // i.e. vector holds numbers separated by spaces, distance metric is one of our options, and k is integer>0
         // if invalid continue to next new input from user
         if(!checkInputData(data)) {
+            cout << "user invalid input: " << data << endl;  // TEST
             cout << "invalid input" << endl;
             continue;
         }
 
         int data_len = data.size();
         // sending the user message to the server
-        /* should ensure data_len < buffer>  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  */
+        /* should ensure data_len < buffer> */
         // c_str() converts 'data' from string to *char, because 'send' function needs *char
+
+        cout << "client send: " << data << endl;  // TEST
+
         int sent_bytes = send(sock, data.c_str(), data_len, 0);
         if (sent_bytes < 0) {
             perror("error sending the message");
@@ -107,6 +111,9 @@ void runClient(char* ip_address, int port) {
         char buffer[4096];
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(sock, buffer, expected_data_len, 0);
+        
+        cout << "client receive: " << buffer << endl;  // TEST
+
         if (read_bytes == 0) {
             cout << "connection is closed" << endl;
         } else if (read_bytes < 0) {
