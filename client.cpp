@@ -28,7 +28,7 @@ void TCPClient::runClient() {
 
     /* creating the struct for the address */
     struct sockaddr_in client_sin;      /* struct for the address */
-    memset(&client_sin, 0, sizeof (client_sin)); /* It copies a single character for a specified number
+    memset(&client_sin, 0, sizeof (client_sin)); /* Resets object: It copies a single character for a specified number
     * of times to an object (sin)*/
     client_sin.sin_family = AF_INET;    /* address protocol type */
     client_sin.sin_addr.s_addr = inet_addr(this->ip);    /* ip address of client */
@@ -53,31 +53,22 @@ void TCPClient::runClient() {
         * i.e. vector holds numbers separated by spaces, distance metric is one of our options, and k is integer>0
         * if invalid continue to next new input from user */
         if(!checkInputData(data)) {
-            cout << "user invalid input: " << data << endl;  // TEST
             cout << "invalid input" << endl;
             continue;
         }
 
         int data_len = data.size();
         // sending the user message to the server
-        /* should ensure data_len < buffer> */
         // c_str() converts 'data' from string to *char, because 'send' function needs *char
-
-        cout << "client send: " << data << endl;  // TEST
-//        data += '\0';
-//        char * sentdata = &data[0];
         int sent_bytes = send(sock, data.c_str(), data_len, 0);
         if (sent_bytes < 0) {
             /* if we couldn't send the message, an error has occurred. We should try again. */
             perror("error sending the message");
-            // exit (-1)
+            continue;
         }
         char buffer[4096];
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(sock, buffer, expected_data_len, 0);
-
-        cout << "client receive: " << buffer << endl;  // TEST
-
         if (read_bytes == 0) {
             cout << "connection is closed" << endl;
         } else if (read_bytes < 0) {
@@ -91,6 +82,13 @@ void TCPClient::runClient() {
     close(sock);
 }
 
+/**
+ * main function of client side. Gets args from user, and performs input check on it.
+ * Than it initializes TCPClient object, and runs it.
+ * @param argc - number of input args.
+ * @param argv - char* array of user's input.
+ * @return
+ */
 int main (int argc, char *argv[]) {
    
     if (argc != 3) {
