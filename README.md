@@ -1,4 +1,4 @@
-# Advanced-Programming- Ex 2
+# Advanced-Programming- Ex 3
 this is the manual for Ex2.
 
 SHOULD GO OVER IT!!!
