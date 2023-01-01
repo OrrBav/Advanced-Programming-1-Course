@@ -1,19 +1,15 @@
 
-#include <iostream>
-#include <sys/socket.h>
-#include <stdio.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <string.h>
-#include <string>
-#include <vector>
-#include "knn.h"
-#include "readFromFile.h"
-# include "function.h"
+#include "server.h"
 
-using namespace std;
-
+/**
+ * constructor for the TCP server.
+ * @param port - int between 1024-65535
+ * @param file_reader - readFromFile object created from path to csv provided by user.
+ * It holds information about csv file, we will later use for KNN implementation.
+ */
+TCPServer::TCPServer(int port, readFromFile& file_reader) : reader(file_reader) {
+    this->port = port;
+}
 
 /**
  * function creates and runs a server, according to its initialized port. It first creates a socket, binds it,
@@ -24,9 +20,9 @@ using namespace std;
  * @param reader - readFromFile object that holds the data from input csv.
  * @return
  */
-int runServer(int port, readFromFile& reader){
+int TCPServer::runServer(){
     
-    const int server_port = port;
+    const int server_port = this->port;
     // socket creation, sock_stream is a const for TCP
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
@@ -163,6 +159,6 @@ int main (int argc, char *argv[]) {
         cout << "invalid port address" << endl;
         exit(-1);
     }
-
-    runServer(stoi(port),reader);
+    TCPServer server = TCPServer(stoi(port), reader);
+    server.runServer();
 }

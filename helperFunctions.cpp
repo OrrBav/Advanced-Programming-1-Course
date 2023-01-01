@@ -118,6 +118,53 @@ bool checkPort (string portNum) {
 }
 
 
+/**
+ * checks if input ip is valid - 4 numbers, each range from 0 to 255, separated by dots.
+ * @param str_ip - string of input ip
+ * @return true is valid, false otherwise.
+ */
+bool checkIP(string str_ip) {
+    char single_cut;
+    string new_num;
+    int dot_count = 0;
+    vector <int> ipNumbers;
+    for (int i = 0; i < str_ip.length(); i++) {
+        if (isdigit(str_ip[i])) {
+            /* converts input_srt[i] from char to string, and enables stoi check */
+            single_cut = str_ip[i];
+            string string_cut{ single_cut };
+            new_num += string_cut;
+        }
+            /* char is not a digit: can only be a dot. */
+        else {
+            if (str_ip[i] == '.') {
+                dot_count++;
+                /* more than 3 digits are invalid ip address. */
+                if (new_num.length() > 3) {
+                    return false;
+                }
+                ipNumbers.push_back(stoi(new_num));
+                new_num = "";
+            }
+                /* invalid char: not a digit or a dot. */
+            else {
+                return false;
+            }
+        }
+    }
+    /* we check new_num length again for the last octate in the ip address. */
+    if (dot_count != 3 || new_num.length() > 3) {
+        return false;
+    }
+    ipNumbers.push_back(stoi(new_num));
+    for (int i = 0; i < ipNumbers.size(); i++) {
+        if (ipNumbers[i] < 0 || ipNumbers[i] > 255) {
+            return false;
+        }
+    }
+    return true;
+}
+
 /*  checks that the given string holds a valid and positive integer. 
     receives a pointer to the beginning of the string and checks char after char    */
 bool isPositiveInteger(const char *str) {
