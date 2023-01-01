@@ -8,8 +8,8 @@ SHOULD GO OVER IT!!!
 2. git clone -b Ex2-Master-Branch https://github.com/OrrBav/Advanced-Programming-1.git (the designated branch for Ex2)
 3. cd Advanced-Programming-1
 4. make
-5. for server side: ./server.out  argv[1](file path) argv[2](port).
-6. for client side: ./client.out argv[1](server ip) argv[2](server's port).
+5. for server side: ./server.out  argv1:(file path) argv2:(port).
+6. for client side: ./client.out argv1:(server ip) argv2:(server's port).
 
 **Our code is an implementation of the KNN algorithm:**
 On this exercise, we implemented server and client side of TCP protocol, whice classify input from client side at server side, and than server send cllassification
