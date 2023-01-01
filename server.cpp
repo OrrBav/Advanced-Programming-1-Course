@@ -1,19 +1,15 @@
 
-#include <iostream>
-#include <sys/socket.h>
-#include <stdio.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <string.h>
-#include <string>
-#include <vector>
-#include "knn.h"
-#include "readFromFile.h"
-# include "function.h"
+#include "server.h"
 
-using namespace std;
-
+/**
+ * constructor for the TCP server.
+ * @param port - int between 1024-65535
+ * @param file_reader - readFromFile object created from path to csv provided by user.
+ * It holds information about csv file, we will later use for KNN implementation.
+ */
+TCPServer::TCPServer(int port, readFromFile& file_reader) : reader(file_reader) {
+    this->port = port;
+}
 
 /**
  * function creates and runs a server, according to its initialized port. It first creates a socket, binds it,
@@ -24,9 +20,9 @@ using namespace std;
  * @param reader - readFromFile object that holds the data from input csv.
  * @return
  */
-int runServer(int port, readFromFile& reader){
+int TCPServer::runServer(){
     
-    const int server_port = port;
+    const int server_port = this->port;
     // socket creation, sock_stream is a const for TCP
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
@@ -66,28 +62,25 @@ int runServer(int port, readFromFile& reader){
         // now "work" only with this client 
         while (true) {
             char messageBuffer[4096]; // creates a buffer to receive the message from the client
-            cout << "buffer: " << messageBuffer << endl;
+            memset(messageBuffer,0,sizeof(messageBuffer));
             int expected_data_len = sizeof (messageBuffer); /* maximum length of received data */
 
             // receive the message from the clients socket into 'messageBuffer'
             int read_bytes = recv(client_sock, messageBuffer, expected_data_len, 0);
-            cout << "server receive: " << messageBuffer << endl;  // TEST
             if (read_bytes == 0) {
                 perror("Connection is closed");
                 break;  // finish working with this client
             } else if (read_bytes < 0) {
-                perror("Error");
+                perror("Error had occurred");
                 break;  // finish working with this client
             } else {
-
                 messageBuffer[read_bytes] = '\0'; // Null-terminate the message
-
                 string check(messageBuffer);
                 string prediction;
                 // if message received from client is invalid, return "invalid input" and continue
                 if (!checkInputData(messageBuffer)) {
                     cout << check << endl;
-                    prediction = "invalid input: server";
+                    prediction = "invalid input";
                 }
                 else {
                     // split tne received buffer
@@ -104,31 +97,24 @@ int runServer(int port, readFromFile& reader){
                     for (string& str : words) {
                         float feature = stof(str);
                         inputVector.push_back(feature);
-                    }             
-
-
-                    /* Should perform input check on k (<= .y_train.size) and inputVector (= reader.featuresPerLine).
-                    * This is the only place we can check it!*/
-                    /* make sure k value is smaller than the number of samples in given file. */
+                    }
+                    /* perform input check on k (<= .y_train.size) and inputVector (= reader.featuresPerLine).
+                    * This is the only place we can check it! */
                     
                     if (k >= reader.y_train.size()) {
-                        prediction = "invalid input: k";
+                        prediction = "invalid input";
                     } else if (inputVector.size() != reader.featuresPerLine) {
-                        prediction = "invalid input: vector";
+                        prediction = "invalid input";
                     } else {        /* valid input from user */
                         Knn knn = Knn(k, distanceMatric, reader.X_train, reader.y_train);
                         prediction = knn.predict(inputVector);
                     }
 
-                    // knn returns a string, and send receives a char[]
-                    /* no reason to use is. should delete at the end.
-                    sendMessage = &prediction[0]; */
                 }
                 char* sendMessage = &prediction[0];
-                int sizeOfMessage = prediction.size();      /* alternative to .c_str(); */
-                // send the prediction/message back to client. ( c_str converts string into char* )
-                cout << "server send: " << sendMessage << endl;  // TEST
-                int sent_bytes = send(client_sock, prediction.c_str(), prediction.size() + 1, 0); /* +1 for null
+                int sizeOfMessage = sizeof(prediction);      /* alternative to .c_str(); */
+                /* send the prediction/message back to client. c_str converts string into char* type. */
+                int sent_bytes = send(client_sock, prediction.c_str(), sizeOfMessage, 0); /* +1 for null
                 * terminated char! */
                 //int sent_bytes = send(client_sock, sendMessage, sizeOfMessage + 1, 0);
                 if (sent_bytes < 0) {
@@ -145,6 +131,13 @@ int runServer(int port, readFromFile& reader){
 
 /* extract port number and csv file from argv and perform input checks on them
     */
+/**
+ * main function of server side. Gets args from user, and performs input check on it.
+ * Than it initializes TCPServer object, and runs it.
+ * @param argc - number of input args.
+ * @param argv - char* array of user's input.
+ * @return - 0;
+ */
 int main (int argc, char *argv[]) {
 
     if (argc != 3) {
@@ -163,6 +156,7 @@ int main (int argc, char *argv[]) {
         cout << "invalid port address" << endl;
         exit(-1);
     }
-
-    runServer(stoi(port),reader);
+    TCPServer server = TCPServer(stoi(port), reader);
+    server.runServer();
+    return 0;
 }

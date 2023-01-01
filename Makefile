@@ -1,6 +1,6 @@
 # Makefile for running two programs
 
-# Choose the compiler.
+# Chooses the right compiler.
 CC = g++ -std=c++11
 # Have the right clean command.
 ifeq ($(OS),Windows_NT)
@@ -9,7 +9,6 @@ else
 	CLN=rm
 endif
 
-BUILD_FILES := mainRun.o
 BUILD_FILES += distanceMatric.o
 BUILD_FILES += helperFunctions.o
 BUILD_FILES += input_check.o
