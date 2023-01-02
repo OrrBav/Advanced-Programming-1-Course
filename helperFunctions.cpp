@@ -21,7 +21,7 @@ bool checkInputData(string data) {
 
     // minimal input data size is 3 (e.g. "3 MAN 7"). less than that is invalid
     if (words.size() < 3) {
-        cout << "words size < 3";
+        // cout << "words size < 3";
         return false;
     }
 
