@@ -80,11 +80,14 @@ bool checkDistanceInput(string inputDistance) {
 
 // checks that input port is valid
 bool checkPort (string portNum) {
-    int temp;
+//    int temp;
         if (isPositiveInteger(portNum.c_str())) {
-            temp = stoi(portNum);
-            if (1024 < temp <= 65535) {
+            int temp = stoi(portNum);
+            if ((1024 <= temp) && (temp <= 65535)) {
                 return true;
+            }
+            else {
+                return false;
             }
         }
         else {
