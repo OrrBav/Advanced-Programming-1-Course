@@ -6,7 +6,7 @@ Open 2 terminals (1- for server side, 2- for client side):
 On both Terminals 1 & 2:
 1. git init  
 2. git clone https://github.com/ArielAsh1/Advanced-Programming-1-EX3.git  
-3. cd Advanced-Programming-1  
+3. cd Advanced-Programming-1-EX3  
 4. make  
 5. **On Terminal 1 (server):** recieve 2 arguments-   
 ./server.out file_path port  
