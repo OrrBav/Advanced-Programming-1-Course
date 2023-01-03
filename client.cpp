@@ -72,13 +72,13 @@ void TCPClient::runClient() {
         int read_bytes = recv(sock, buffer, expected_data_len, 0);
         if (read_bytes == 0) {
             cout << "connection is closed" << endl;
+            break;
         } else if (read_bytes < 0) {
             perror("error has occurred");
+            break;
         } else {
             /* printing the message from server. buffer variable holds it. */
             cout << buffer << endl;
-            cout << "message is: " << buffer << endl;
-            cout << "just trying something....." << endl;
         }
 
     }
