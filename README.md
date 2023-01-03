@@ -8,9 +8,9 @@ On both Terminals 1 & 2:
 2. git clone https://github.com/ArielAsh1/Advanced-Programming-1-EX3.git  
 3. cd Advanced-Programming-1  
 4. make  
-5. **On Terminal 1 (server):**  
+5. **On Terminal 1 (server):** recieve 2 arguments-   
 ./server.out file_path port  
-6. **On terminal 2 (client):**  
+6. **On terminal 2 (client):** recieve 2 arguments-   
 ./client.out server ip server_port  
 
 On this exercise, we implemented server and client side with TCP protocol.  
