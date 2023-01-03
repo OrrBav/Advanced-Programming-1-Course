@@ -1,13 +1,17 @@
-# Advanced-Programming- Ex 3
+# Advanced-Programming-1 - Ex 3
 this is the manual for Ex3.
 
-**to compile and run perform the following commands:**
-1. git init
-2. git clone -b Ex2-Master-Branch https://github.com/OrrBav/Advanced-Programming-1.git (the designated branch for Ex2)
-3. cd Advanced-Programming-1
-4. make
-5. for server side: ./server.out  argv1:(file path) argv2:(port).
-6. for client side: ./client.out argv1:(server ip) argv2:(server's port).
+**to compile and run perform the following commands:**  
+Open 2 terminals (1- for server side, 2- for client side):  
+On Terminal 1 & 2:  
+1. git init  
+2. git clone https://github.com/ArielAsh1/Advanced-Programming-1-EX3.git  
+3. cd Advanced-Programming-1  
+4. make  
+**On Terminal 1 (server):**  
+5. ./server.out  argv1:(file path) argv2:(port).  
+** On terminal 2 (client):**  
+6. ./client.out argv1:(server ip) argv2:(server's port).  
 
 On this exercise, we implemented server and client side of TCP protocol.  
 The server classifies input from client side, and then the server sends the cllassification back to client, where message is printed.    
