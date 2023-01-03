@@ -75,11 +75,9 @@ int TCPServer::runServer(){
                 break;  // finish working with this client
             } else {
                 messageBuffer[read_bytes] = '\0'; // Null-terminate the message
-                string check(messageBuffer);
                 string prediction;
                 // if message received from client is invalid, return "invalid input" and continue
                 if (!checkInputData(messageBuffer)) {
-                    cout << check << endl;
                     prediction = "invalid input";
                 }
                 else {
