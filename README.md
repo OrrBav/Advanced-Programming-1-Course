@@ -1,7 +1,5 @@
 # Advanced-Programming- Ex 3
-this is the manual for Ex2.
-
-SHOULD GO OVER IT!!!
+this is the manual for Ex3.
 
 **to compile and run perform the following commands:**
 1. git init
