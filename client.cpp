@@ -67,6 +67,7 @@ void TCPClient::runClient() {
             continue;
         }
         char buffer[4096];
+        memset(buffer,0,sizeof(buffer));
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(sock, buffer, expected_data_len, 0);
         if (read_bytes == 0) {
@@ -76,6 +77,8 @@ void TCPClient::runClient() {
         } else {
             /* printing the message from server. buffer variable holds it. */
             cout << buffer << endl;
+            cout << "message is: " << buffer << endl;
+            cout << "just trying something....." << endl;
         }
 
     }

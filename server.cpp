@@ -110,7 +110,8 @@ int TCPServer::runServer(){
 
                 }
                 char* sendMessage = &prediction[0];
-                int sizeOfMessage = sizeof(prediction);      /* alternative to .c_str(); */
+                int sizeOfMessage = prediction.size();      /* alternative to .c_str(); */
+                cout << prediction << " " << sizeOfMessage + 1 << endl;
                 /* send the prediction/message back to client. c_str converts string into char* type. */
                 int sent_bytes = send(client_sock, prediction.c_str(), sizeOfMessage + 1, 0); /* +1 for null
                 * terminated char! */
