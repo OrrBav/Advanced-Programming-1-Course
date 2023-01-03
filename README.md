@@ -3,7 +3,7 @@ This is the manual for Ex3.
 
 **to compile and run perform the following commands:**  
 Open 2 terminals (1- for server side, 2- for client side):  
-On both Terminal 1 & 2:
+On both Terminals 1 & 2:
 1. git init  
 2. git clone https://github.com/ArielAsh1/Advanced-Programming-1-EX3.git  
 3. cd Advanced-Programming-1  
@@ -13,8 +13,8 @@ On both Terminal 1 & 2:
 6. **On terminal 2 (client):**  
 ./client.out server ip server's port  
 
-On this exercise, we implemented server and client side of TCP protocol.  
-The server classifies input from client side, and then the server sends the cllassification back to client, where message is printed.    
+On this exercise, we implemented server and client side with TCP protocol.  
+The server classifies input from client, then sends the cllassification back to client, where message is printed.    
 The program will loop endlessly, until "-1" is inserted for client side, where client will close itself.  
 Server will forver stay running, and therfore we can reconnect to it from a new client with the same command as before: "./client.out ip port.  
 To initialize server we run: "./server.out csv file locatiom port.  
