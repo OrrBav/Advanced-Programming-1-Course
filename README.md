@@ -9,9 +9,9 @@ On both Terminals 1 & 2:
 3. cd Advanced-Programming-1  
 4. make  
 5. **On Terminal 1 (server):**  
-./server.out file path port  
+./server.out file_path port  
 6. **On terminal 2 (client):**  
-./client.out server ip server's port  
+./client.out server ip server_port  
 
 On this exercise, we implemented server and client side with TCP protocol.  
 The server classifies input from client, then sends the cllassification back to client, where message is printed.    
