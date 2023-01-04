@@ -8,17 +8,19 @@ On both Terminals 1 & 2:
 2. git clone https://github.com/ArielAsh1/Advanced-Programming-1-EX3.git  
 3. cd Advanced-Programming-1-EX3  
 4. make  
-5. **On Terminal 1 (server):** recieve 2 arguments-   
+5. **On Terminal 1 (server):** recieves 2 arguments-   
 ./server.out file_path port  
-6. **On terminal 2 (client):** recieve 2 arguments-   
+6. **On terminal 2 (client):** recieves 2 arguments-   
 ./client.out server ip server_port  
 
 On this exercise, we implemented server and client side with TCP protocol.  
 The server classifies input from client, then sends the cllassification back to client, where message is printed.    
 The program will loop endlessly, until "-1" is inserted for client side, where client will close itself.  
 Server will forver stay running, and therfore we can reconnect to it from a new client with the same command as before: "./client.out ip port".  
-To initialize server, run command: "./server.out csv file locatiom port".  
-After a succesfull initialize, user will insert input for client: numbers vector, separated by spaces distance matric integer k.  
+To initialize server, run command: "./server.out csv file locatiom port".
+Port should be the same for server and client, and between 1024 and 65535.
+Ip address should be valid address: 4 numbers, from 0 to 255, separated by dots.
+After a succesfull initialize, user will insert input for client: numbers vector, separated by spaces, distance matric and a potisitve integer k.  
 All of these arguments undergo a series of input checks to make sure they are valid, on both programs.
 If found not valid - the program will print a fitting message, at client side, where user can reinsert a new input.  
 
