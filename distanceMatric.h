@@ -1,6 +1,4 @@
-//
-// Created by orrbb on 07/12/2022.
-//
+
 using namespace std;
 
 #ifndef ADVANCED_PROGRAMMING_1_DISTANCEMATRIC_H
