@@ -1,6 +1,3 @@
-//
-// Created by orrbb on 01/01/2023.
-//
 
 #ifndef ADVANCED_PROGRAMMING_1_EX3_SERVER_H
 #define ADVANCED_PROGRAMMING_1_EX3_SERVER_H

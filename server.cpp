@@ -1,5 +1,9 @@
 
 #include "server.h"
+#include <vector>
+#include <thread>
+#include "io.h"
+#include "command.h"
 
 /**
  * constructor for the TCP server.
@@ -9,6 +13,58 @@
  */
 TCPServer::TCPServer(int port, readFromFile& file_reader) : reader(file_reader) {
     this->port = port;
+}
+
+static void handleClient(readFromFile reader, int client_sock) {
+    DefaultIO *dio = new SocketIO(client_sock);
+
+    // now "work" only with this client 
+    while (true) {
+        string clientInput = dio->read();
+        if (clientInput.empty()) {
+            perror("Connection is closed");
+            break;  // finish working with this client
+        } else {
+            string prediction;
+            // if message received from client is invalid, return "invalid input" and continue
+            if (!checkInputData(clientInput)) {
+                prediction = "invalid input";
+            }
+            else {
+                // split tne received buffer
+                vector<string> words = splitString(clientInput, ' ');
+                
+                // extract k, vector and dist
+                int k = stoi(words.back());
+                words.pop_back();
+                string distanceMatric = words.back();
+                words.pop_back();
+                vector<float> inputVector;
+                /* by now only "numbers vector" is in words object.
+                * for each number in words: */
+                for (string& str : words) {
+                    float feature = stof(str);
+                    inputVector.push_back(feature);
+                }
+                /* perform input check on k (<= .y_train.size) and inputVector (= reader.featuresPerLine).
+                * This is the only place we can check it! */
+                
+                if (k >= reader.y_train.size()) {
+                    prediction = "invalid input";
+                } else if (inputVector.size() != reader.featuresPerLine) {
+                    prediction = "invalid input";
+                } else {        /* valid input from user */
+                    Knn knn = Knn(k, distanceMatric, reader.X_train, reader.y_train);
+                    prediction = knn.predict(inputVector);
+                }
+
+            }
+
+            dio->write(prediction);
+        }
+    }
+
+    delete dio;
 }
 
 /**
@@ -48,6 +104,8 @@ int TCPServer::runServer(){
         exit(-1);
     }
     
+    vector<thread *> open_threads;
+
     // the server remains open (even when client side closes)
     while (true) {
         struct sockaddr_in client_sin; /* address struct for the sender info */
@@ -59,70 +117,32 @@ int TCPServer::runServer(){
             exit(-1);
         }
 
-        // now "work" only with this client 
-        while (true) {
-            char messageBuffer[4096]; // creates a buffer to receive the message from the client
-            memset(messageBuffer,0,sizeof(messageBuffer));
-            int expected_data_len = sizeof (messageBuffer); /* maximum length of received data */
+        thread *t = new thread(handleClient, reader, client_sock);
+        open_threads.push_back(t);
+    }
 
-            // receive the message from the clients socket into 'messageBuffer'
-            int read_bytes = recv(client_sock, messageBuffer, expected_data_len, 0);
-            if (read_bytes == 0) {
-                perror("Connection is closed");
-                break;  // finish working with this client
-            } else if (read_bytes < 0) {
-                perror("Error had occurred");
-                break;  // finish working with this client
-            } else {
-                messageBuffer[read_bytes] = '\0'; // Null-terminate the message
-                string prediction;
-                // if message received from client is invalid, return "invalid input" and continue
-                if (!checkInputData(messageBuffer)) {
-                    prediction = "invalid input";
-                }
-                else {
-                    // split tne received buffer
-                    vector<string> words = splitString(messageBuffer, ' ');
-                    
-                    // extract k, vector and dist
-                    int k = stoi(words.back());
-                    words.pop_back();
-                    string distanceMatric = words.back();
-                    words.pop_back();
-                    vector<float> inputVector;
-                    /* by now only "numbers vector" is in words object.
-                    * for each number in words: */
-                    for (string& str : words) {
-                        float feature = stof(str);
-                        inputVector.push_back(feature);
-                    }
-                    /* perform input check on k (<= .y_train.size) and inputVector (= reader.featuresPerLine).
-                    * This is the only place we can check it! */
-                    
-                    if (k >= reader.y_train.size()) {
-                        prediction = "invalid input";
-                    } else if (inputVector.size() != reader.featuresPerLine) {
-                        prediction = "invalid input";
-                    } else {        /* valid input from user */
-                        Knn knn = Knn(k, distanceMatric, reader.X_train, reader.y_train);
-                        prediction = knn.predict(inputVector);
-                    }
-
-                }
-                int sizeOfMessage = prediction.size();      /* alternative to .c_str(); */
-                /* send the prediction/message back to client. c_str converts string into char* type. */
-                int sent_bytes = send(client_sock, prediction.c_str(), sizeOfMessage + 1, 0); /* +1 for null
-                * terminated char! */
-                if (sent_bytes < 0) {
-                    cout << "error sending to client." << endl;
-                }
-            }
-        }
+    // iterates through all open threads and delete them from heap
+    for (auto iter = open_threads.begin(); iter != open_threads.end(); iter++) {
+        thread *t = *iter;
+        // join makes sure the thread is done running and only then allow to delete it
+        t->join();  //(*t).join
+        delete t;
     }
 
     // closes the server socket
     close(sock);
     return 0;
+}
+
+void printMenu() {
+    vector<Command *> commands = {
+        new UploadCommand(),
+        new AlgorithmSettingsCommand()
+    };
+
+    for (int i = 0; i < commands.size(); i++) {
+        cout << i + 1 << ". " << commands.at(i)->description << endl;
+    }
 }
 
 /* extract port number and csv file from argv and perform input checks on them
@@ -135,10 +155,15 @@ int TCPServer::runServer(){
  * @return - 0;
  */
 int main (int argc, char *argv[]) {
+    // example to how should work:
+    // printMenu();
+    // Command *cmd = new AlgorithmSettingsCommand();
+    // cmd->execute();
+    // exit(0);
 
     if (argc != 3) {
-    cout << "Should have received " << 3 << " arguments, but received " << argc << " instead" << endl;
-    exit(-1);
+        cout << "Should have received " << 3 << " arguments, but received " << argc << " instead" << endl;
+        exit(-1);
     }
 
     string filename = argv[1];
