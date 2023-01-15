@@ -14,6 +14,18 @@ readFromFile::readFromFile(string inputFile) {
     featuresPerLine = 0; // init with 0 so it can be updated when reading the file
 }
 
+readFromFile::readFromFile() {
+    fileName = "Error! No Path was Given.";
+    featuresPerLine = 0;
+}
+/**
+ * setter for file name.
+ * @param fileName - path to file.
+ */
+void readFromFile::setFile(string fileName) {
+    this->fileName = fileName;
+}
+
 vector<float> readFromFile::handleLine(string& line) {
     struct ParsedLine ret = parseInput(line, true, ',');
     y_train.push_back(ret.label);

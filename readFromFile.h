@@ -18,6 +18,11 @@ public:
 
     // constructor:
     readFromFile(string inputFile);
+    // defualt constructor
+    readFromFile();
+
+    // setter
+    void setFile(string inputFile);
 
     // the read function:
     int read();
