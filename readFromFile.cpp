@@ -8,16 +8,23 @@ in each line read the entire line (all values and the label)
 values are stored in X_train 2d vector as strings.
 labels are stored in labels 1d vector as strings.*/
 
-// constructor:
+/**
+ * constructor for class.
+ * @param inputFile - path for csv file.
+ */
 readFromFile::readFromFile(string inputFile) {
     fileName = inputFile;
     featuresPerLine = 0; // init with 0 so it can be updated when reading the file
 }
 
+/**
+ * default constructor for class.
+ */
 readFromFile::readFromFile() {
     fileName = "Error! No Path was Given.";
     featuresPerLine = 0;
 }
+
 /**
  * setter for file name.
  * @param fileName - path to file.
@@ -48,14 +55,16 @@ int readFromFile::read() {
                 vector<float> row = handleLine(line);
                 if (featuresPerLine != row.size()) {
                     cout << "Encountered two lines with different number of features" << endl;
-                    exit(-1); 
+                    // exit(-1);
+                    return -1;
                 }
             }
         }
     }
     else { 
         cout << "Failed to read file" << endl;
-        exit(-1);
+        // exit(-1);
+        return -1;
     }
     return 0;
 }

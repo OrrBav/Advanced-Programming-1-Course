@@ -20,6 +20,7 @@ bool checkIP(string str_ip);
 bool checkInputData(string data);
 bool isPositiveInteger(const char *str);
 bool isFloat(string& str);
+vector <string> checkCommandTwo (string input);
 ParsedLine parseInput(string& line, bool hasLabel, char delimiter);
 
 vector <float> check(string input_str, vector <float>& numbers);

@@ -17,6 +17,7 @@ class CLI {
 public:
 CLI(DefaultIO* dio);
 void start();
+void printManu();
 virtual ~CLI();
 };
 
