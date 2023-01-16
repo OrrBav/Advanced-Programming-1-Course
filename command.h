@@ -61,6 +61,7 @@ public:
         this->dio->write("Please upload your local test CSV file.");
         file_path = this->dio->read();
         this->commandData.reader_unclassified.setFile(file_path);
+        // TODO: change read(), so it can also create reader with no y_train values
         flag = this->commandData.reader_unclassified.read();
         if (flag == -1) {
             this->dio->write("invalid input");
@@ -112,8 +113,6 @@ public:
         }
         this->commandData.k = stoi(dataInput[0]);
         this->commandData.distanceMetric = dataInput[1];
-        // TODO: check k < num of rows in file
-        // TODO: enter with no input will keep the current values
     }
     ~AlgorithmSettingsCommand() override {};
 };
