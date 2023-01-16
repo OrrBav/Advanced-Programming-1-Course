@@ -8,6 +8,7 @@
 #include <vector>
 #include "io.h"
 #include "command.h"
+#include "function.h"
 
 class CLI {
     DefaultIO* dio;

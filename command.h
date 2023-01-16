@@ -86,10 +86,15 @@ public:
         this->commandData.distanceMetric);
         string input = this->dio->read();
         vector<string> dataInput = checkCommandTwo(input);
+        if (dataInput.empty()) {
+            // user pressed enter, values should remain.
+            return;
+        }
         if (dataInput.size() == 1) {
             this->dio->write("Should provide 2 arguments.");
             return;
         }
+        // TODO: what error to print if num of args != 2?
         // input check for values
         if (dataInput[0] == "Error" || dataInput[1] == "Error") {
             if (dataInput[0] == "Error") {

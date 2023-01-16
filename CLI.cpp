@@ -28,17 +28,22 @@ void CLI::printManu() {
 // TODO
 void CLI::start() {
     int input = 0;
-    int index = 0;
+    string inputStr;
+    int index;
     while (input != 8) {
         printManu();
-        // TODO: input check on input?
-        input = stoi(dio->read());
+        inputStr = dio->read();
+        if (!isPositiveInteger(inputStr.c_str())) {
+            // input check
+            continue;
+        }
+        input = stoi(inputStr);
         if (input < 1 || (input > 5 && input != 8))
             continue;
-        if (input == 8) {
-            index = 5;      // ensrure command[index] works with all manu elements
-        }
         index = input - 1;
+        if (input == 8) {
+            index = 5;      // ensure command[index] works with all manu elements
+        }
         commands[index]->execute();
     }
 }

@@ -296,6 +296,10 @@ vector <float> vectorAddition(vector <float> v1, vector <float> v2) {
 vector <string> checkCommandTwo (string input) {
     vector<string> words = splitString(input, ' ');
     vector <string> returnData;
+    // if input is empty string, user pressed enter, and command2 values should remain unchanged
+    if (words.empty()) {
+        return returnData;
+    }
     // input size should be 2: integer k and distance metric
     if (words.size() != 2) {
         returnData.emplace_back("Error - should be provided with 2 args");
