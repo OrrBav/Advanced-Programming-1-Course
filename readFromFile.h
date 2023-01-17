@@ -26,6 +26,8 @@ public:
 
     // the read function:
     int read();
+
+    void clearVector ();
 };
 
 #endif

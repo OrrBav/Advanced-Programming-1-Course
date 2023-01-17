@@ -52,7 +52,9 @@ public:
         this->commandData.reader_classified.setFile(file_path);
         int flag = this->commandData.reader_classified.read();
         if (flag == -1) {
+            // read function appends values to members, so they should be erased.
             this->dio->write("invalid input");
+            this->commandData.reader_classified.clearVector();
             return;
         }
         else {
@@ -65,6 +67,8 @@ public:
         flag = this->commandData.reader_unclassified.read();
         if (flag == -1) {
             this->dio->write("invalid input");
+            this->commandData.reader_classified.clearVector();
+            this->commandData.reader_unclassified.clearVector();
             return;
         }
         else {

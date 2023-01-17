@@ -54,17 +54,28 @@ int readFromFile::read() {
             while (getline(file, line)) {
                 vector<float> row = handleLine(line);
                 if (featuresPerLine != row.size()) {
-                    cout << "Encountered two lines with different number of features" << endl;
+                    // cout << "Encountered two lines with different number of features" << endl;
                     // exit(-1);
+                    // clear reader members
+                    this->X_train.clear();
+                    this->y_train.clear();
                     return -1;
                 }
             }
         }
     }
     else { 
-        cout << "Failed to read file" << endl;
+        // cout << "Failed to read file" << endl;
         // exit(-1);
+        // clear reader members
+        this->X_train.clear();
+        this->y_train.clear();
         return -1;
     }
     return 0;
+}
+
+void readFromFile::clearVector () {
+    this->X_train.clear();
+    this->y_train.clear();
 }
