@@ -135,6 +135,8 @@ int TCPServer::runServer(){
 }
 
 void printMenu() {
+    //TODO further implement.
+    /*
     vector<Command *> commands = {
         new UploadCommand(),
         new AlgorithmSettingsCommand()
@@ -143,6 +145,7 @@ void printMenu() {
     for (int i = 0; i < commands.size(); i++) {
         cout << i + 1 << ". " << commands.at(i)->description << endl;
     }
+     */
 }
 
 /* extract port number and csv file from argv and perform input checks on them

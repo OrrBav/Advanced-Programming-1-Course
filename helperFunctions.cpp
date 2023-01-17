@@ -201,6 +201,7 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
     for (string& str : row) {
         // make sure the word is a float, otherwise we exit
         if (!isFloat(str)) {
+            // TODO: fix! last word has "\r" added.
             cout << "Encountered an invalid (non-float) feature: " << str << endl;
             exit(-1);
         }
@@ -292,6 +293,38 @@ vector <float> vectorAddition(vector <float> v1, vector <float> v2) {
     }
     return v3;
 }
+
+vector <string> checkCommandTwo (string input) {
+    vector<string> words = splitString(input, ' ');
+    vector <string> returnData;
+    // if input is empty string, user pressed enter, and command2 values should remain unchanged
+    if (words.empty()) {
+        return returnData;
+    }
+    // input size should be 2: integer k and distance metric
+    if (words.size() != 2) {
+        returnData.emplace_back("Error - should be provided with 2 args");
+        return returnData;
+    }
+    // splitting the data into k, distance metric
+    string distanceInput = words.back();
+    words.pop_back();
+    string kInput = words.back();
+    words.pop_back();
+    returnData.emplace_back(kInput);
+    returnData.emplace_back(distanceInput);
+
+    if (!isPositiveInteger(kInput.c_str())) {
+        returnData[0] = "Error";
+    }
+
+    // check input distance metric
+    if (!checkDistanceInput(distanceInput)) {
+        returnData[1] = "Error";
+    }
+    return returnData;
+}
+
 
 /*
  * function should iterate over users input(represented by input_str) and check if input is valid.

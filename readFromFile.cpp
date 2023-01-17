@@ -8,10 +8,29 @@ in each line read the entire line (all values and the label)
 values are stored in X_train 2d vector as strings.
 labels are stored in labels 1d vector as strings.*/
 
-// constructor:
+/**
+ * constructor for class.
+ * @param inputFile - path for csv file.
+ */
 readFromFile::readFromFile(string inputFile) {
     fileName = inputFile;
     featuresPerLine = 0; // init with 0 so it can be updated when reading the file
+}
+
+/**
+ * default constructor for class.
+ */
+readFromFile::readFromFile() {
+    fileName = "Error! No Path was Given.";
+    featuresPerLine = 0;
+}
+
+/**
+ * setter for file name.
+ * @param fileName - path to file.
+ */
+void readFromFile::setFile(string fileName) {
+    this->fileName = fileName;
 }
 
 vector<float> readFromFile::handleLine(string& line) {
@@ -35,15 +54,28 @@ int readFromFile::read() {
             while (getline(file, line)) {
                 vector<float> row = handleLine(line);
                 if (featuresPerLine != row.size()) {
-                    cout << "Encountered two lines with different number of features" << endl;
-                    exit(-1); 
+                    // cout << "Encountered two lines with different number of features" << endl;
+                    // exit(-1);
+                    // clear reader members
+                    this->X_train.clear();
+                    this->y_train.clear();
+                    return -1;
                 }
             }
         }
     }
     else { 
-        cout << "Failed to read file" << endl;
-        exit(-1);
+        // cout << "Failed to read file" << endl;
+        // exit(-1);
+        // clear reader members
+        this->X_train.clear();
+        this->y_train.clear();
+        return -1;
     }
     return 0;
+}
+
+void readFromFile::clearVector () {
+    this->X_train.clear();
+    this->y_train.clear();
 }
