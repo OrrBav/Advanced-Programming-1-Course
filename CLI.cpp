@@ -34,12 +34,14 @@ void CLI::start() {
         printManu();
         inputStr = dio->read();
         if (!isPositiveInteger(inputStr.c_str())) {
-            // input check
+            this->dio->write("invalid input");
             continue;
         }
         input = stoi(inputStr);
-        if (input < 1 || (input > 5 && input != 8))
+        if (input < 1 || (input > 5 && input != 8)) {
+            this->dio->write("invalid input");
             continue;
+        }
         index = input - 1;
         if (input == 8) {
             index = 5;      // ensure command[index] works with all manu elements
