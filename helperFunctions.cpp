@@ -201,6 +201,7 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
     for (string& str : row) {
         // make sure the word is a float, otherwise we exit
         if (!isFloat(str)) {
+            // TODO: fix! last word has "\r" added.
             cout << "Encountered an invalid (non-float) feature: " << str << endl;
             exit(-1);
         }
