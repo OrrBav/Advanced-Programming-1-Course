@@ -1,5 +1,4 @@
 #include "function.h"
-# include <algorithm>
 
 using namespace std;
 
