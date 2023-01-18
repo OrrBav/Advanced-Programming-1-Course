@@ -14,32 +14,38 @@ CLI::CLI(DefaultIO *dio) {
     commands.push_back(new DisplayResultCommand(dio, commandData));
     commands.push_back(new DownloadResultsCommand(dio, commandData));
     commands.push_back(new ExitCommand(dio));
-    //TODO: add other commands. should have shared state?
 }
 
-// TODO
-void CLI::printManu() {
+
+/**
+ * prints description of all commands.
+ */
+void CLI::printMenu() {
     dio->write("Welcome to the KNN Classifier Server. Please choose an option:");
     for (int i = 0; i < commands.size(); i++) {
         dio->write(commands[i]->description);
     }
 }
 
-// TODO
+/**
+ * main function for CLI. loops on menu, and handles it commands.
+ */
 void CLI::start() {
     int input = 0;
     string inputStr;
     int index;
     while (input != 8) {
-        printManu();
+        printMenu();
         inputStr = dio->read();
         if (!isPositiveInteger(inputStr.c_str())) {
-            // input check
+            this->dio->write("invalid input");
             continue;
         }
         input = stoi(inputStr);
-        if (input < 1 || (input > 5 && input != 8))
+        if (input < 1 || (input > 5 && input != 8)) {
+            this->dio->write("invalid input");
             continue;
+        }
         index = input - 1;
         if (input == 8) {
             index = 5;      // ensure command[index] works with all manu elements
@@ -48,9 +54,9 @@ void CLI::start() {
     }
 }
 
-
-
-// TODO - delete all commands
+/**
+ * destructor for CLI class.
+ */
 CLI::~CLI() {
     for (auto & command : commands) {
         delete command;

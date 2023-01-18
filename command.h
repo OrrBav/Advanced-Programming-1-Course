@@ -2,6 +2,8 @@
 #define ADVANCED_PROGRAMMING_1_EX4_COMMAND_H
 
 #include <string>
+#include <iostream>
+#include <fstream>
 #include "io.h"
 #include "readFromFile.h"
 #include "function.h"
@@ -96,7 +98,7 @@ public:
             return;
         }
         if (dataInput.size() == 1) {
-            this->dio->write("Should provide 2 arguments.");
+            this->dio->write("invalid input");
             return;
         }
         // TODO: what error to print if num of args != 2?
@@ -133,10 +135,13 @@ public:
             return;
         }
         // TODO: should run knn on classified, and than classify the unclassified
+        string prediction;
         Knn knn = Knn(this->commandData.k, this->commandData.distanceMetric, this->commandData.reader_classified.X_train,
                       this->commandData.reader_classified.y_train);
-        // TODO: loop on unclassified csv rows(=vector), and save prediction in reader_unclassified.y_train
-        // string prediction = knn.predict();
+        for (int i = 0; i < this->commandData.reader_unclassified.X_train.size(); i++) {
+            prediction = knn.predict(this->commandData.reader_unclassified.X_train[i]);
+            this->commandData.reader_unclassified.y_train.push_back(prediction);
+        }
     }
     ~ClassifyDataCommand() override {};
 };
@@ -156,7 +161,7 @@ public:
         // data is uploaded and classified
         else {
             for (int i=0; i < this->commandData.reader_unclassified.y_train.size(); i++) {
-                this->dio->write(to_string(i) + "\t" + this->commandData.reader_unclassified.y_train[i]);
+                this->dio->write(to_string(i + 1) + "\t" + this->commandData.reader_unclassified.y_train[i]);
             }
             this->dio->write("Done.");
         }
@@ -178,9 +183,21 @@ public:
         }
         // data is uploaded and classified
         else {
-            this->dio->write("Please enter path to file:");
+            // TODO: client side should check for path validity. server should write to file.
+            this->dio->write("Please enter path to the new file:");
             string path = this->dio->read();
-            // TODO: write (in same format as command4) y labels to file in @path
+            ofstream file;
+            file.open(path);
+            if (file.is_open()) {
+                for (int i = 0; i < this->commandData.reader_unclassified.y_train.size(); i++) {
+                    string write = to_string(i + 1) + "," + this->commandData.reader_unclassified.y_train[i] + "\n";
+                    file << write;
+                }
+                file.close();
+            }
+            else {
+                this->dio->write("invalid input");
+            }
         }
     }
     ~DownloadResultsCommand() override {};
