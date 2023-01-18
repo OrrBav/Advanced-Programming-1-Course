@@ -1,4 +1,5 @@
 #include "function.h"
+# include <algorithm>
 
 using namespace std;
 
@@ -198,7 +199,13 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
     }
 
     // run through every word (feature) in the row vector
-    for (string& str : row) {
+    for (string& str : row) {        
+        // on the last str in row, remove the "\r" that's concatenated to it.
+        // so <"4","5","8","6\r"> turns into <"4","5","8","6"> and now isFloat=True for all, as expected
+         if (str == row.back()) {
+            str.erase(remove(str.begin(), str.end(), '\r'), str.end());
+        }
+        
         // make sure the word is a float, otherwise we exit
         if (!isFloat(str)) {
             // TODO: fix! last word has "\r" added.
