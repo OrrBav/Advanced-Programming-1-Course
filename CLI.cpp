@@ -8,11 +8,11 @@ CLI::CLI(DefaultIO *dio) {
     CommandData new_commandData;
     this->commandData = new_commandData;
     //TODO make sure commandData is passed by reference
-    commands.push_back(new UploadCommand(dio, commandData));
-    commands.push_back(new AlgorithmSettingsCommand(dio, commandData));
-    commands.push_back(new ClassifyDataCommand(dio, commandData));
-    commands.push_back(new DisplayResultCommand(dio, commandData));
-    commands.push_back(new DownloadResultsCommand(dio, commandData));
+    commands.push_back(new UploadCommand(dio));
+    commands.push_back(new AlgorithmSettingsCommand(dio));
+    commands.push_back(new ClassifyDataCommand(dio));
+    commands.push_back(new DisplayResultCommand(dio));
+    commands.push_back(new DownloadResultsCommand(dio));
     commands.push_back(new ExitCommand(dio));
 }
 
@@ -31,6 +31,7 @@ void CLI::printMenu() {
  * main function for CLI. loops on menu, and handles it commands.
  */
 void CLI::start() {
+    CommandData new_commandData;
     int input = 0;
     string inputStr;
     int index;
@@ -50,7 +51,7 @@ void CLI::start() {
         if (input == 8) {
             index = 5;      // ensure command[index] works with all manu elements
         }
-        commands[index]->execute();
+        commands[index]->execute(&new_commandData);
     }
 }
 

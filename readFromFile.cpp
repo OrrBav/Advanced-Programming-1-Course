@@ -53,6 +53,8 @@ int readFromFile::read(bool hasLabel) {
             // read the rest of the lines, from second line till end of file
             while (getline(file, line)) {
                 vector<float> row = handleLine(line);
+                // TODO: if haslabel is false, row doesnt hold the last number in row, that leat to if statment
+                // to be true.
                 if (featuresPerLine != row.size()) {
                     // cout << "Encountered two lines with different number of features" << endl;
                     // exit(-1);
