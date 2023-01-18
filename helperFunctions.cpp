@@ -183,6 +183,7 @@ bool isNotSpace(unsigned char ch) {
     return !isspace(ch);
 }
 
+// checking something 19.01.23
 void trim(string& s) {
     // removes spaces (e.g: " ", \r, \n) from given string ()
     // removes before start of str "   asd"
