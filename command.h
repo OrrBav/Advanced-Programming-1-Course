@@ -66,6 +66,7 @@ public:
         flag = commandData->reader_unclassified.read(false);
         if (flag == -1) {
             this->dio->write("invalid input");
+            // TODO: check if number of features is the same in both file.
             // read function appends values to members, so they should be erased.
             commandData->reader_classified.clearVector();
             commandData->reader_unclassified.clearVector();
