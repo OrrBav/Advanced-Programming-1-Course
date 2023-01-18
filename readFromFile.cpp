@@ -33,20 +33,20 @@ void readFromFile::setFile(string fileName) {
     this->fileName = fileName;
 }
 
-vector<float> readFromFile::handleLine(string& line) {
-    struct ParsedLine ret = parseInput(line, true, ',');
+vector<float> readFromFile::handleLine(string& line, bool hasLabel) {
+    struct ParsedLine ret = parseInput(line, hasLabel, ',');
     y_train.push_back(ret.label);
     X_train.push_back(ret.features);
     return ret.features;
 }
 // TODO: add default flag for read, handleLine
-int readFromFile::read() {
+int readFromFile::read(bool hasLabel) {
     string line, word;
     // open file and read from it
     fstream file(fileName, ios::in);
     if (file.is_open()) {
         if (getline(file, line)) {
-            vector<float> row = handleLine(line);
+            vector<float> row = handleLine(line, hasLabel);
             // read the first line in the file and initialize featuresPerLine
             featuresPerLine = row.size();
 

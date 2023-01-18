@@ -34,7 +34,7 @@ public:
     Command(string description, DefaultIO *dio) : dio(dio) {
         this->description = description;
     }
-        // c++ initializes members of object with ": dio(dio)" syntax.
+    // c++ initializes members of object with ": dio(dio)" syntax.
     // abstract functions
     virtual void execute() = 0;
     // destructor
@@ -66,9 +66,10 @@ public:
         file_path = this->dio->read();
         this->commandData.reader_unclassified.setFile(file_path);
         // TODO: change read(), so it can also create reader with no y_train values
-        flag = this->commandData.reader_unclassified.read();
+        flag = this->commandData.reader_unclassified.read(true);
         if (flag == -1) {
             this->dio->write("invalid input");
+            // read function appends values to members, so they should be erased.
             this->commandData.reader_classified.clearVector();
             this->commandData.reader_unclassified.clearVector();
             return;
