@@ -187,6 +187,7 @@ public:
 
             // TODO: client side should check for path validity. server should write to file.
             this->dio->write("CLIENT_CMD_DOWNLOAD");
+            // checking something 20.1.23
             /* TODO: dear Orr, this file should be named differently for each client (maybe Socket number, 
             or use stream instead) */ 
             uploadFileLine(dio, "./temp/cmd5download.txt");
