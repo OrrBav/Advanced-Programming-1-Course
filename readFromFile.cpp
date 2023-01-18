@@ -39,7 +39,7 @@ vector<float> readFromFile::handleLine(string& line) {
     X_train.push_back(ret.features);
     return ret.features;
 }
-
+// TODO: add default flag for read, handleLine
 int readFromFile::read() {
     string line, word;
     // open file and read from it

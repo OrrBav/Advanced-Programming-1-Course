@@ -194,7 +194,9 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
 
     // if we have a label - we want to parse it, and make sure row will only contain features
     if (hasLabel) {
+        // TODO: look into
         ret.label = row.back();
+        ret.label.erase(remove(ret.label.begin(), ret.label.end(), '\r'), ret.label.end());
         row.pop_back();
     }
 
