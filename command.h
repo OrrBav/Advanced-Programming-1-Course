@@ -46,53 +46,35 @@ public:
     UploadCommand(DefaultIO *dio) : Command("1. upload an unclassified csv data file", dio) {}
     void execute(CommandData *commandData) override {
         // TODO: server responsible for uploaded file input check, client for written file.
-        this->dio->write("Please upload your local train CSV file.");
+        this->dio->write("CLIENT_CMD_UPLOAD");
         // write the train file content into a new local file on server side
-        fstream trainFile("./train.csv", ios::out | ios::trunc);
-        while (true) {
-            string line = dio->read();
-            if (line == "Done.") {
-                break;
-            }
-            trainFile << line << endl;
-        }
+        downloadFileLine(dio, "./train.csv");
         
         commandData->reader_classified.setFile("./train.csv");
-        int flag = commandData->reader_classified.read();
+        int flag = commandData->reader_classified.read(true);
         if (flag == -1) {
             // read function appends values to members, so they should be erased.
-            this->dio->write("invalid input");
+            this->dio->write("CLIENT_CMD_ABORT");
             commandData->reader_classified.clearVector();
             return;
         }
-        else {
-            this->dio->write("Upload complete.");
-        }
-        this->dio->write("Please upload your local test CSV file.");
+
+        this->dio->write("CLIENT_CMD_UPLOAD");
         // write the test file content into a new local file on server side
-        fstream testFile("./test.csv", ios::out | ios::trunc);
-        while (true) {
-            string line = dio->read();
-            if (line == "Done.") {
-                break;
-            }
-            testFile << line << endl;
-        }
+        downloadFileLine(dio, "./test.csv");
         commandData->reader_unclassified.setFile("./test.csv");
         // TODO: change read(), so it can also create reader with no y_train values
         flag = commandData->reader_unclassified.read(false);
         if (flag == -1) {
-            this->dio->write("invalid input");
+            this->dio->write("CLIENT_CMD_ABORT");
             // TODO: check if number of features is the same in both file.
             // read function appends values to members, so they should be erased.
             commandData->reader_classified.clearVector();
             commandData->reader_unclassified.clearVector();
             return;
         }
-        else {
-            this->dio->write("Upload complete.");
-        }
         commandData->isDataUploaded = true;
+        this->dio->write("Upload complete.");
     }
     ~UploadCommand() override {};
 };
@@ -170,6 +152,7 @@ public:
         }
         // data is uploaded and classified
         else {
+            this->dio->write("CLIENT_CMD_RESULTS");
             for (int i=0; i < commandData->reader_unclassified.y_train.size(); i++) {
                 this->dio->write(to_string(i + 1) + "\t" + commandData->reader_unclassified.y_train[i]);
             }
@@ -191,21 +174,22 @@ public:
         }
         // data is uploaded and classified
         else {
-            // TODO: client side should check for path validity. server should write to file.
-            this->dio->write("Please enter path to the new file:");
-            string path = this->dio->read();
-            ofstream file;
-            file.open(path);
-            if (file.is_open()) {
-                for (int i = 0; i < commandData->reader_unclassified.y_train.size(); i++) {
-                    string write = to_string(i + 1) + "," + commandData->reader_unclassified.y_train[i] + "\n";
-                    file << write;
-                }
-                file.close();
-            }
-            else {
+            fstream file("./temp/cmd5download.txt", ios_base::out | ios_base::trunc);
+            if (!file.is_open()) {
                 this->dio->write("invalid input");
+                return;
             }
+
+            for (int i=0; i < commandData->reader_unclassified.y_train.size(); i++) {
+                file << to_string(i + 1) << "\t" << commandData->reader_unclassified.y_train[i] << endl;
+            }
+            file.close();
+
+            // TODO: client side should check for path validity. server should write to file.
+            this->dio->write("CLIENT_CMD_DOWNLOAD");
+            /* TODO: dear Orr, this file should be named differently for each client (maybe Socket number, 
+            or use stream instead) */ 
+            uploadFileLine(dio, "./temp/cmd5download.txt");
         }
     }
     ~DownloadResultsCommand() override {};

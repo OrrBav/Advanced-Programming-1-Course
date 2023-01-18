@@ -34,6 +34,7 @@ void readFromFile::setFile(string fileName) {
 }
 
 vector<float> readFromFile::handleLine(string& line, bool hasLabel) {
+    cout << line << endl;
     struct ParsedLine ret = parseInput(line, hasLabel, ',');
     y_train.push_back(ret.label);
     X_train.push_back(ret.features);

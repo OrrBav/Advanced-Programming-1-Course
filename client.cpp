@@ -1,7 +1,53 @@
 
 #include "client.h"
+#include "io.h"
+#include <stdio.h>
 
 using namespace std;
+
+// return true if should wait for user input
+bool handleServerInput(SocketIO sio, string serverInput) {
+    if (serverInput == "CLIENT_CMD_UPLOAD") {
+        cout << "Please upload your local train CSV file." << endl;
+        string trainFilePath;
+        getline(cin, trainFilePath);
+        // finish early if an error occurred during upload OR during file parsing
+        if (!uploadFileLine(&sio, trainFilePath) || sio.read() == "CLIENT_CMD_ABORT") {
+            cout << "invalid input" << endl;
+            return false;
+        }
+        cout << "Upload complete." << endl;
+
+        cout << "Please upload your local test CSV file." << endl;
+        string testFilePath;
+        getline(cin, testFilePath);
+        if (!uploadFileLine(&sio, testFilePath) || sio.read() == "CLIENT_CMD_ABORT") {
+            cout << "invalid input" << endl;
+            return false;
+        }
+        cout << "Upload complete." << endl;
+
+        return false;
+    } else if (serverInput == "CLIENT_CMD_RESULTS") {
+        string result;
+        do {
+            result = sio.read();
+            cout << result << endl;
+        } while (result != "Done.");
+        return false;
+    } else if (serverInput == "CLIENT_CMD_DOWNLOAD") {
+        cout << "Please enter path to the new file:" << endl;
+        string path;
+        getline(cin, path);
+        downloadFile(sio, path);
+        return false;
+    } else if (serverInput == "CLIENT_CMD_ABORT") {
+        return false;
+    } else {
+        cout << serverInput << endl;
+    }
+    return true;
+}
 
 /**
  * constructor for a TCP Client. both args provided by user.
@@ -38,48 +84,20 @@ void TCPClient::runClient() {
         exit (-1);
     }
 
+    SocketIO sio(sock);
     /* client runs in a loop infinitely until stopped */
     while (true) {
-        char buffer[4096];
-        memset(buffer,0,sizeof(buffer));
-        int expected_data_len = sizeof(buffer);
-        int read_bytes = recv(sock, buffer, expected_data_len, 0);
-        if (read_bytes == 0) {
+        string serverInput = sio.read();
+        // if sio returns "" it means read_bytes <= 0
+        if (serverInput == "") {
             cout << "connection is closed" << endl;
             break;
-        } else if (read_bytes < 0) {
-            perror("error has occurred");
-            break;
-        } else {
-            /* printing the message from server. buffer variable holds it. */
-            cout << buffer << endl;
         }
 
-        /* get data input ("vector distance k") from the user */
-        string data;
-        getline(cin, data);
-
-        /* if user input is "-1" we close the client */
-        if (data == "-1") {
-            break;
-        }
-
-        /* perform input checks on user input to make sure the vector, distance metric and k are valid
-        * i.e. vector holds numbers separated by spaces, distance metric is one of our options, and k is integer>0
-        * if invalid continue to next new input from user */
-        // if(!checkInputData(data)) {
-        //     cout << "invalid input" << endl;
-        //     continue;
-        // }
-
-        int data_len = data.size();
-        // sending the user message to the server
-        // c_str() converts 'data' from string to *char, because 'send' function needs *char
-        int sent_bytes = send(sock, data.c_str(), data_len, 0);
-        if (sent_bytes < 0) {
-            /* if we couldn't send the message, an error has occurred. We should try again. */
-            perror("error sending the message");
-            continue;
+        if (handleServerInput(sio, serverInput)) {
+            string data;
+            getline(cin, data);
+            sio.write(data);
         }
     }
     close(sock);
@@ -93,7 +111,6 @@ void TCPClient::runClient() {
  * @return
  */
 int main (int argc, char *argv[]) {
-   
     if (argc != 3) {
         cout << "Should have received " << 3 << " arguments, but received " << argc << " instead" << endl;
         exit(-1);

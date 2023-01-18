@@ -17,55 +17,10 @@ TCPServer::TCPServer(int port, readFromFile& file_reader) : reader(file_reader) 
 }
 
 static void handleClient(readFromFile reader, int client_sock) {
-    DefaultIO *dio = new SocketIO(client_sock);
-    CLI *cli = new CLI(dio);
+    SocketIO *sio = new SocketIO(client_sock);
+    CLI *cli = new CLI(sio);
     cli->start();
-    // // now "work" only with this client 
-    // while (true) {
-    //     string clientInput = dio->read();
-    //     if (clientInput.empty()) {
-    //         perror("Connection is closed");
-    //         break;  // finish working with this client
-    //     } else {
-    //         string prediction;
-    //         // if message received from client is invalid, return "invalid input" and continue
-    //         if (!checkInputData(clientInput)) {
-    //             prediction = "invalid input";
-    //         }
-    //         else {
-    //             // split tne received buffer
-    //             vector<string> words = splitString(clientInput, ' ');
-                
-    //             // extract k, vector and dist
-    //             int k = stoi(words.back());
-    //             words.pop_back();
-    //             string distanceMatric = words.back();
-    //             words.pop_back();
-    //             vector<float> inputVector;
-    //             /* by now only "numbers vector" is in words object.
-    //             * for each number in words: */
-    //             for (string& str : words) {
-    //                 float feature = stof(str);
-    //                 inputVector.push_back(feature);
-    //             }
-    //             /* perform input check on k (<= .y_train.size) and inputVector (= reader.featuresPerLine).
-    //             * This is the only place we can check it! */
-                
-    //             if (k >= reader.y_train.size()) {
-    //                 prediction = "invalid input";
-    //             } else if (inputVector.size() != reader.featuresPerLine) {
-    //                 prediction = "invalid input";
-    //             } else {        /* valid input from user */
-    //                 Knn knn = Knn(k, distanceMatric, reader.X_train, reader.y_train);
-    //                 prediction = knn.predict(inputVector);
-    //             }
-    //         }
-
-    //         dio->write(prediction);
-    //     }
-    // }
-
-    delete dio;
+    delete sio;
 }
 
 /**
@@ -166,8 +121,7 @@ int main (int argc, char *argv[]) {
 
     string filename = argv[1];
     // check input csv file is valid and extract all its data to reader object
-    readFromFile reader(filename);
-    reader.read();
+    readFromFile reader;
 
     // check input port is valid
     string port = argv[2];

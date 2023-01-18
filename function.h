@@ -8,6 +8,7 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
+#include "io.h"
 using namespace std;
 
 struct ParsedLine {
@@ -24,10 +25,15 @@ bool isFloat(string& str);
 vector <string> checkCommandTwo (string input);
 ParsedLine parseInput(string& line, bool hasLabel, char delimiter);
 
+bool uploadFile(SocketIO sio, string filePath);
+bool downloadFile(SocketIO sio, string filePath);
+bool uploadFileLine(DefaultIO *dio, string filePath);
+bool downloadFileLine(DefaultIO *dio, string filePath);
+
 vector <float> check(string input_str, vector <float>& numbers);
 void print_decimal(float q);
 void trim(string& s);
-// helper Functions:
+
 vector <float> vectorSubtraction(vector <float> v1, vector <float> v2);
 vector <float> vectorRaiseToPower(vector <float> vector, double toThePowerOf = 2);
 float vectorSquareRoot(vector <float> vector);

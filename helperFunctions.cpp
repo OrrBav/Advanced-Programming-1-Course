@@ -183,7 +183,6 @@ bool isNotSpace(unsigned char ch) {
     return !isspace(ch);
 }
 
-// checking something 19.01.23
 void trim(string& s) {
     // removes spaces (e.g: " ", \r, \n) from given string ()
     // removes before start of str "   asd"
@@ -199,6 +198,7 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
     // this struct holds the line's values: features and label (if exists)
     struct ParsedLine ret;
     trim(line);
+
     stringstream strstream(line);
     vector<string> row;
     string word;
@@ -208,42 +208,103 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
 
     // if we have a label - we want to parse it, and make sure row will only contain features
     if (hasLabel) {
-        // TODO: look into
         ret.label = row.back();
         row.pop_back();
+        //cout << ret.label << endl;
     }
 
     // run through every word (feature) in the row vector
     for (string& str : row) {      
-        
         // make sure the word is a float, otherwise we exit
         if (!isFloat(str)) {
-            // TODO: fix! last word has "\r" added.
             cout << "Encountered an invalid (non-float) feature: " << str << endl;
-            exit(-1);
+            exit(0);
         }
         else {
             float feature = stof(str);
             ret.features.push_back(feature);
         }
     }
+    
     return ret;
 }
 
-int readFile(string path, void (*handleLine)(string line)) {
-    fstream file(path, ios::binary | ios::in);
-    if (file.is_open()) {
-        string line; // w
-        while (getline(file, line)) {
-            // sio->write(line);
-            handleLine(line);
-        }
-        // success
-        return 0;
-    } else {
-        // failure
-        return -1;
+// returns true on success
+bool downloadFileLine(DefaultIO *dio, string filePath) {
+    ofstream file(filePath, ios::trunc);
+    if (!file.is_open()) {
+        return false;
     }
+    
+    string line;
+    do {
+        line = dio->read();
+        if (line == "Done.") {
+            break;
+        }
+        file << line << endl;
+    } while (true);
+    file.close();
+    return true;
+}
+
+// returns true on success
+bool uploadFileLine(DefaultIO *dio, string filePath) {
+    fstream file(filePath, ios::in);
+    if (!file.is_open()) {
+        return false;
+    }
+
+    string line;
+    while (getline(file, line)) {
+        dio->write(line);
+    }
+    dio->write("Done.");
+    file.close();
+    return true;
+}
+
+// NOTE: not in use, but do not delete for now!
+// returns true on success
+bool downloadFile(SocketIO sio, string filePath) {
+    ofstream file(filePath, ios::trunc);
+    if (!file.is_open()) {
+        return false;
+    }
+
+    do {
+        string data = sio.read();
+        size_t idx = data.find("Done.");
+        if (idx != string::npos) {
+            // so we found "Done.", and save string up to its index
+            file << data.substr(0, idx - 1);
+            break;
+        }
+        file << data << endl;
+    } while (true);
+
+    return true;
+}
+// NOTE: not in use, but do not delete for now!
+// returns true on success
+bool uploadFile(SocketIO sio, string filePath) {
+    const size_t BUFFER_SIZE = 4096;
+    char buffer[BUFFER_SIZE];
+    FILE *file = fopen(filePath.c_str(), "r");
+    size_t bytes_read;
+    do {
+        bytes_read = fread(buffer, sizeof(char), BUFFER_SIZE - 1, file);
+        if (bytes_read <= 0) {
+            return false;
+        }
+        buffer[BUFFER_SIZE - 1] = '\0';
+        string str = buffer;
+        cout << str << endl;
+        sio.write(buffer);
+    // as long as we are still reading the full buffer size, it means we still need to read more
+    } while (bytes_read == BUFFER_SIZE - 1);
+    sio.write("Done.");
+    return true;
 }
 
 /*
