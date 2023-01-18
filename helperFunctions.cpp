@@ -178,12 +178,26 @@ bool isFloat(string& str) {
     return ReachedEndOfString && succeeded;
 }
 
+bool isNotSpace(unsigned char ch) {
+    // checks for each char if is not a space
+    return !isspace(ch);
+}
+
+void trim(string& s) {
+    // removes spaces (e.g: " ", \r, \n) from given string ()
+    // removes before start of str "   asd"
+    s.erase(s.begin(), find_if(s.begin(), s.end(), isNotSpace));
+    // removes after end of str "asd   \r"
+    s.erase(find_if(s.rbegin(), s.rend(), isNotSpace).base(), s.end());
+}
+
 /*  this function should parse the line given to it, and exit if there's an error (feature is not a float)
     we use hasLabel=true when we read from an input file with labels
     we use hasLabel=false when we read input from the user (no label) */
 ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
     // this struct holds the line's values: features and label (if exists)
     struct ParsedLine ret;
+    trim(line);
     stringstream strstream(line);
     vector<string> row;
     string word;
@@ -195,17 +209,11 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
     if (hasLabel) {
         // TODO: look into
         ret.label = row.back();
-        ret.label.erase(remove(ret.label.begin(), ret.label.end(), '\r'), ret.label.end());
         row.pop_back();
     }
 
     // run through every word (feature) in the row vector
-    for (string& str : row) {        
-        // on the last str in row, remove the "\r" that's concatenated to it.
-        // so <"4","5","8","6\r"> turns into <"4","5","8","6"> and now isFloat=True for all, as expected
-         if (str == row.back()) {
-            str.erase(remove(str.begin(), str.end(), '\r'), str.end());
-        }
+    for (string& str : row) {      
         
         // make sure the word is a float, otherwise we exit
         if (!isFloat(str)) {
@@ -219,6 +227,22 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
         }
     }
     return ret;
+}
+
+int readFile(string path, void (*handleLine)(string line)) {
+    fstream file(path, ios::binary | ios::in);
+    if (file.is_open()) {
+        string line;
+        while (getline(file, line)) {
+            // sio->write(line);
+            handleLine(line);
+        }
+        // success
+        return 0;
+    } else {
+        // failure
+        return -1;
+    }
 }
 
 /*

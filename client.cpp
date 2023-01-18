@@ -40,32 +40,6 @@ void TCPClient::runClient() {
 
     /* client runs in a loop infinitely until stopped */
     while (true) {
-        /* get data input ("vector distance k") from the user */
-        string data;
-        getline(cin, data);
-
-        /* if user input is "-1" we close the client */
-        if (data == "-1") {
-            break;
-        }
-
-        /* perform input checks on user input to make sure the vector, distance metric and k are valid
-        * i.e. vector holds numbers separated by spaces, distance metric is one of our options, and k is integer>0
-        * if invalid continue to next new input from user */
-        if(!checkInputData(data)) {
-            cout << "invalid input" << endl;
-            continue;
-        }
-
-        int data_len = data.size();
-        // sending the user message to the server
-        // c_str() converts 'data' from string to *char, because 'send' function needs *char
-        int sent_bytes = send(sock, data.c_str(), data_len, 0);
-        if (sent_bytes < 0) {
-            /* if we couldn't send the message, an error has occurred. We should try again. */
-            perror("error sending the message");
-            continue;
-        }
         char buffer[4096];
         memset(buffer,0,sizeof(buffer));
         int expected_data_len = sizeof(buffer);
@@ -81,6 +55,32 @@ void TCPClient::runClient() {
             cout << buffer << endl;
         }
 
+        /* get data input ("vector distance k") from the user */
+        string data;
+        getline(cin, data);
+
+        /* if user input is "-1" we close the client */
+        if (data == "-1") {
+            break;
+        }
+
+        /* perform input checks on user input to make sure the vector, distance metric and k are valid
+        * i.e. vector holds numbers separated by spaces, distance metric is one of our options, and k is integer>0
+        * if invalid continue to next new input from user */
+        // if(!checkInputData(data)) {
+        //     cout << "invalid input" << endl;
+        //     continue;
+        // }
+
+        int data_len = data.size();
+        // sending the user message to the server
+        // c_str() converts 'data' from string to *char, because 'send' function needs *char
+        int sent_bytes = send(sock, data.c_str(), data_len, 0);
+        if (sent_bytes < 0) {
+            /* if we couldn't send the message, an error has occurred. We should try again. */
+            perror("error sending the message");
+            continue;
+        }
     }
     close(sock);
 }

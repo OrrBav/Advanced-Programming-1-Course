@@ -1,6 +1,3 @@
-//
-// Created by orrbb on 15/01/2023.
-//
 
 #include "CLI.h"
 CLI::CLI(DefaultIO *dio) {
@@ -21,10 +18,11 @@ CLI::CLI(DefaultIO *dio) {
  * prints description of all commands.
  */
 void CLI::printMenu() {
-    dio->write("Welcome to the KNN Classifier Server. Please choose an option:");
+    string menu = "Welcome to the KNN Classifier Server. Please choose an option:\n";
     for (int i = 0; i < commands.size(); i++) {
-        dio->write(commands[i]->description);
+        menu += commands[i]->description + '\n';
     }
+    dio->write(menu);
 }
 
 /**
@@ -37,7 +35,7 @@ void CLI::start() {
     int index;
     while (input != 8) {
         printMenu();
-        inputStr = dio->read();
+        inputStr = dio->read();        
         if (!isPositiveInteger(inputStr.c_str())) {
             this->dio->write("invalid input");
             continue;
@@ -64,9 +62,3 @@ CLI::~CLI() {
     }
 }
 
-
-int main () {
-    StandardIO dio;
-    CLI cli(&dio);
-    cli.start();
-}
