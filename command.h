@@ -134,8 +134,9 @@ public:
                       commandData->reader_classified.y_train);
         for (int i = 0; i < commandData->reader_unclassified.X_train.size(); i++) {
             prediction = knn.predict(commandData->reader_unclassified.X_train[i]);
-            commandData->reader_unclassified.y_train.push_back(prediction);
+            commandData->reader_unclassified.y_train[i] = prediction;
         }
+        commandData->isClassified = true;
     }
     ~ClassifyDataCommand() override {};
 };
