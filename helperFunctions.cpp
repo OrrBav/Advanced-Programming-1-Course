@@ -232,7 +232,7 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
 int readFile(string path, void (*handleLine)(string line)) {
     fstream file(path, ios::binary | ios::in);
     if (file.is_open()) {
-        string line;
+        string line; // w
         while (getline(file, line)) {
             // sio->write(line);
             handleLine(line);
