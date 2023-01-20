@@ -107,10 +107,11 @@ public:
             }
             return;
         }
-        // if reader was constructed, should check k < number of features
+        // if reader was constructed, should check k < number of vectors (can also be number of rows in y_train)
         if (commandData->isDataUploaded &&
-        stoi(dataInput[0]) >commandData->reader_classified.featuresPerLine) {
+        stoi(dataInput[0]) >commandData->reader_classified.y_train.size()) {
             this->dio->write("invalid value for K");
+            return;
         }
         commandData->k = stoi(dataInput[0]);
         commandData->distanceMetric = dataInput[1];
@@ -135,6 +136,7 @@ public:
             prediction = knn.predict(commandData->reader_unclassified.X_train[i]);
             commandData->reader_unclassified.y_train[i] = prediction;
         }
+        this->dio->write("classifying data complete");
         commandData->isClassified = true;
     }
     ~ClassifyDataCommand() override {};
