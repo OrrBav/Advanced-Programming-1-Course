@@ -26,7 +26,7 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter);
 
 vector <float> check(string input_str, vector <float>& numbers);
 void print_decimal(float q);
-
+void trim(string& s);
 // helper Functions:
 vector <float> vectorSubtraction(vector <float> v1, vector <float> v2);
 vector <float> vectorRaiseToPower(vector <float> vector, double toThePowerOf = 2);

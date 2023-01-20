@@ -47,8 +47,17 @@ public:
     void execute(CommandData *commandData) override {
         // TODO: server responsible for uploaded file input check, client for written file.
         this->dio->write("Please upload your local train CSV file.");
-        string file_path = this->dio->read();
-        commandData->reader_classified.setFile(file_path);
+        // write the train file content into a new local file on server side
+        fstream trainFile("./train.csv", ios::out | ios::trunc);
+        while (true) {
+            string line = dio->read();
+            if (line == "Done.") {
+                break;
+            }
+            trainFile << line << endl;
+        }
+        
+        commandData->reader_classified.setFile("./train.csv");
         int flag = commandData->reader_classified.read();
         if (flag == -1) {
             // read function appends values to members, so they should be erased.
@@ -60,8 +69,16 @@ public:
             this->dio->write("Upload complete.");
         }
         this->dio->write("Please upload your local test CSV file.");
-        file_path = this->dio->read();
-        commandData->reader_unclassified.setFile(file_path);
+        // write the test file content into a new local file on server side
+        fstream testFile("./test.csv", ios::out | ios::trunc);
+        while (true) {
+            string line = dio->read();
+            if (line == "Done.") {
+                break;
+            }
+            testFile << line << endl;
+        }
+        commandData->reader_unclassified.setFile("./test.csv");
         // TODO: change read(), so it can also create reader with no y_train values
         flag = commandData->reader_unclassified.read(false);
         if (flag == -1) {
@@ -76,7 +93,6 @@ public:
             this->dio->write("Upload complete.");
         }
         commandData->isDataUploaded = true;
-
     }
     ~UploadCommand() override {};
 };

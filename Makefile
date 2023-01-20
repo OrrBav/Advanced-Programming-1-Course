@@ -12,6 +12,7 @@ endif
 BUILD_FILES += distanceMatric.o
 BUILD_FILES += helperFunctions.o
 BUILD_FILES += knn.o
+BUILD_FILES += CLI.o
 BUILD_FILES += readFromFile.o
 
 
