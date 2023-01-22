@@ -50,11 +50,11 @@ public:
         this->dio->write("Please upload your local train CSV file.");
         // write the train file content into a new local file on server side
         // gets input from client side
-        if (!downloadFileLine(dio, "./train.csv")) {
+        if (!downloadFileLine(dio, "train.csv")) {
             // client has given an invalid file.
             return;
         }
-        commandData->reader_classified.setFile("./train.csv");
+        commandData->reader_classified.setFile("train.csv");
         int flag = commandData->reader_classified.read(true);
         if (flag == -1) {
             // read function appends values to members, so they should be erased.
@@ -64,13 +64,13 @@ public:
         }
         this->dio->write("Upload complete.\nPlease upload your local test CSV file.");
         // write the test file content into a new local file on server side
-        if (!downloadFileLine(dio, "./test.csv")) {
+        if (!downloadFileLine(dio, "test.csv")) {
             // client has given an invalid file
             // first reader, that was initialized, should be cleared
             commandData->reader_classified.clearVector();
             return;
         }
-        commandData->reader_unclassified.setFile("./test.csv");
+        commandData->reader_unclassified.setFile("test.csv");
         flag = commandData->reader_unclassified.read(false);
         if (flag == -1 ||
         commandData->reader_classified.featuresPerLine != commandData->reader_unclassified.featuresPerLine) {
@@ -83,8 +83,8 @@ public:
         commandData->isDataUploaded = true;
         this->dio->write("Upload complete.");
         // TODO: make sure removing is doesn't interrupt other threads.
-        remove("./train.csv");
-        remove("./test.csv");
+        remove("train.csv");
+        remove("test.csv");
     }
     ~UploadCommand() override {};
 };
@@ -108,7 +108,6 @@ public:
             this->dio->write("invalid input");
             return;
         }
-        // TODO: what error to print if num of args != 2?
         // input check for values
         if (dataInput[0] == "Error" || dataInput[1] == "Error") {
             if (dataInput[0] == "Error" && dataInput[1] == "Error") {
@@ -190,12 +189,10 @@ public:
         }
         // data is uploaded and classified
         else {
-            // TODO: why cannot open file when named "./temp/cmd5download.txt", and not "cmd5download.txt"?
             fstream file("cmd5download.txt", ios_base::out | ios_base::trunc);
             //fstream file("./temp/cmd5download.txt", ios_base::out | ios_base::trunc);
             if (!file.is_open()) {
-                // TODO: why invalid here?
-                this->dio->write("invalid input - server 5");
+                this->dio->write("invalid input");
                 return;
             }
 

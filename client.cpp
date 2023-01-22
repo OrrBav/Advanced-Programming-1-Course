@@ -14,7 +14,6 @@ bool handleServerInput(SocketIO sio, string serverInput) {
         getline(cin, trainFilePath);
         // finish early if an error occurred during upload OR during file parsing
         if (!uploadFileLine(&sio, trainFilePath)) {
-            // TODO: separated if statements.
             // client will signal server (through downloadFileLine function) that given path is invalid, and he should
             // terminate the command and go back to printing manu.
             sio.write("SERVER_UPLOAD_ABORT");
@@ -23,6 +22,7 @@ bool handleServerInput(SocketIO sio, string serverInput) {
         }
         string answer = sio.read();
         if (answer == "invalid input") {
+            // file is invalid by server logic.
             cout << serverNewInput << endl;
             return false;
         }
@@ -55,7 +55,6 @@ bool handleServerInput(SocketIO sio, string serverInput) {
         cout << serverNewInput << endl;
         string path;
         getline(cin, path);
-        // TODO: maybe move code to chack if valid path to a function
         ofstream file(path);
         if (!file.is_open()) {
             // couldn't open file in client side, so path is invalid
@@ -109,7 +108,6 @@ void TCPClient::runClient() {
     SocketIO sio(sock);
     /* client runs in a loop infinitely until stopped */
     while (true) {
-        // TODO: what is server is closed in the middle of client communication? exit code 13 error.
         // TODO: should remove "Done." from the last line of downloaded file from command 5.
         string serverInput = sio.read();
         // if sio returns "" it means read_bytes <= 0

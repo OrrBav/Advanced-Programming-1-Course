@@ -4,7 +4,6 @@ CLI::CLI(DefaultIO *dio) {
     this->dio = dio;
     CommandData new_commandData;
     this->commandData = new_commandData;
-    //TODO make sure commandData is passed by reference
     commands.push_back(new UploadCommand(dio));
     commands.push_back(new AlgorithmSettingsCommand(dio));
     commands.push_back(new ClassifyDataCommand(dio));

@@ -75,20 +75,8 @@ int TCPServer::runServer(){
         thread client_thread(handleClient, client_sock);
         // Detach the thread so that it can run independently
         client_thread.detach();
-//        // creates a thread for client, and detaches it for multiple connections simultaneously.
-//        open_threads.emplace_back(handleClient, client_sock);
-//        open_threads.back().detach();
-//        thread *t = new thread(handleClient, client_sock);
-//        open_threads.push_back(t);
-    }
 
-//    // iterates through all open threads and delete them from heap
-//    for (auto iter = open_threads.begin(); iter != open_threads.end(); iter++) {
-//        thread *t = *iter;
-//        // join makes sure the thread is done running and only then allow to delete it
-//        t->join();  //(*t).join
-//        delete t;
-//    }
+    }
     // closes the server socket
     close(sock);
     return 0;
