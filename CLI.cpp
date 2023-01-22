@@ -35,12 +35,18 @@ void CLI::start() {
     int index;
     while (input != 8) {
         printMenu();
+        this->dio->write("write");
         inputStr = dio->read();        
         if (!isPositiveInteger(inputStr.c_str())) {
             this->dio->write("invalid input");
             continue;
         }
-        input = stoi(inputStr);
+        try {
+            input = stoi(inputStr);
+        } catch (const exception& e) {
+            this->dio->write("invalid input");
+            continue;
+        }
         if (input < 1 || (input > 5 && input != 8)) {
             this->dio->write("invalid input");
             continue;

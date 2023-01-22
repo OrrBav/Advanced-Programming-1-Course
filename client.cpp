@@ -1,32 +1,41 @@
 
 #include "client.h"
-#include "io.h"
-#include <stdio.h>
+
 
 using namespace std;
 
 // return true if should wait for user input
 bool handleServerInput(SocketIO sio, string serverInput) {
+    string serverNewInput;
     if (serverInput == "CLIENT_CMD_UPLOAD") {
-        cout << "Please upload your local train CSV file." << endl;
+        serverNewInput = sio.read();
+        cout << serverNewInput << endl;
         string trainFilePath;
         getline(cin, trainFilePath);
         // finish early if an error occurred during upload OR during file parsing
-        if (!uploadFileLine(&sio, trainFilePath) || sio.read() == "CLIENT_CMD_ABORT") {
+        if (!uploadFileLine(&sio, trainFilePath)) {
+            // TODO: separated if statements.
             cout << "invalid input" << endl;
             return false;
         }
-        cout << "Upload complete." << endl;
-
-        cout << "Please upload your local test CSV file." << endl;
+        string answer = sio.read();
+        if (answer == "invalid input") {
+            cout << serverNewInput << endl;
+            return false;
+        }
+        cout << answer << endl;
         string testFilePath;
         getline(cin, testFilePath);
-        if (!uploadFileLine(&sio, testFilePath) || sio.read() == "CLIENT_CMD_ABORT") {
+        if (!uploadFileLine(&sio, testFilePath)) {
             cout << "invalid input" << endl;
             return false;
         }
-        cout << "Upload complete." << endl;
-
+        answer = sio.read();
+        if (answer == "invalid input") {
+            cout << answer << endl;
+            return false;
+        }
+        cout << answer << endl;
         return false;
     } else if (serverInput == "CLIENT_CMD_RESULTS") {
         string result;
@@ -36,9 +45,17 @@ bool handleServerInput(SocketIO sio, string serverInput) {
         } while (result != "Done.");
         return false;
     } else if (serverInput == "CLIENT_CMD_DOWNLOAD") {
-        cout << "Please enter path to the new file:" << endl;
+        serverNewInput = sio.read();
+        cout << serverNewInput << endl;
         string path;
         getline(cin, path);
+        // TODO: maybe move code to chack if valid path to a function
+        ofstream file(path);
+        if (!file.is_open()) {
+            // couldn't open file in client side, so path is invalid
+            cout << "invalid path" << endl;
+            return false;
+        }
         downloadFile(sio, path);
         return false;
     } else if (serverInput == "CLIENT_CMD_ABORT") {
@@ -71,7 +88,6 @@ void TCPClient::runClient() {
         perror("error creating socket");
         exit(-1);
     }
-
     /* creating the struct for the address */
     struct sockaddr_in client_sin;      /* struct for the address */
     memset(&client_sin, 0, sizeof (client_sin)); /* Resets object: It copies a single character for a specified number
@@ -87,17 +103,21 @@ void TCPClient::runClient() {
     SocketIO sio(sock);
     /* client runs in a loop infinitely until stopped */
     while (true) {
+        // TODO: what is server is closed in the middle of client communication? exit code 13 error.
         string serverInput = sio.read();
         // if sio returns "" it means read_bytes <= 0
         if (serverInput == "") {
             cout << "connection is closed" << endl;
             break;
         }
-
-        if (handleServerInput(sio, serverInput)) {
+        // if command is write, should write back
+        // if not - keep reading
+        if (serverInput == "write") {
             string data;
             getline(cin, data);
             sio.write(data);
+        } else {
+            handleServerInput(sio, serverInput);
         }
     }
     close(sock);
@@ -122,7 +142,6 @@ int main (int argc, char *argv[]) {
         cout << "invalid ip address.";
         exit(-1);
     }
-
     // check input port is valid
     string port = argv[2];
     if (!checkPort(port)) {
