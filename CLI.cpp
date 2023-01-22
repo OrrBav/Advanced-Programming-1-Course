@@ -4,7 +4,6 @@ CLI::CLI(DefaultIO *dio) {
     this->dio = dio;
     CommandData new_commandData;
     this->commandData = new_commandData;
-    //TODO make sure commandData is passed by reference
     commands.push_back(new UploadCommand(dio));
     commands.push_back(new AlgorithmSettingsCommand(dio));
     commands.push_back(new ClassifyDataCommand(dio));
@@ -35,12 +34,18 @@ void CLI::start() {
     int index;
     while (input != 8) {
         printMenu();
+        this->dio->write("write");
         inputStr = dio->read();        
         if (!isPositiveInteger(inputStr.c_str())) {
             this->dio->write("invalid input");
             continue;
         }
-        input = stoi(inputStr);
+        try {
+            input = stoi(inputStr);
+        } catch (const exception& e) {
+            this->dio->write("invalid input");
+            continue;
+        }
         if (input < 1 || (input > 5 && input != 8)) {
             this->dio->write("invalid input");
             continue;
@@ -50,6 +55,9 @@ void CLI::start() {
             index = 5;      // ensure command[index] works with all manu elements
         }
         commands[index]->execute(&new_commandData);
+        // makes the program sleep for a short amount of time, and helps for proper communication between client
+        // and server on PLANET. Prevents undefined behaviour due to communication lag.
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
 }
 

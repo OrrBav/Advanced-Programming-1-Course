@@ -13,15 +13,17 @@
 #include <vector>
 #include "knn.h"
 #include "readFromFile.h"
-# include "function.h"
-
+#include "function.h"
+#include <thread>
+#include "io.h"
+#include "command.h"
+#include "CLI.h"
 using namespace std;
 
 class TCPServer {
     int port;
-    readFromFile reader;
 public:
-    TCPServer(int port, readFromFile& file_reader);
+    TCPServer(int port);
     int runServer();
 };
 

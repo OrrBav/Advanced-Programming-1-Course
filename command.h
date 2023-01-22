@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <cstdio>
 #include "io.h"
 #include "readFromFile.h"
 #include "function.h"
@@ -45,29 +46,35 @@ class UploadCommand : public Command {
 public:
     UploadCommand(DefaultIO *dio) : Command("1. upload an unclassified csv data file", dio) {}
     void execute(CommandData *commandData) override {
-        // TODO: server responsible for uploaded file input check, client for written file.
         this->dio->write("CLIENT_CMD_UPLOAD");
+        this->dio->write("Please upload your local train CSV file.");
         // write the train file content into a new local file on server side
-        downloadFileLine(dio, "./train.csv");
-        
-        commandData->reader_classified.setFile("./train.csv");
+        // gets input from client side
+        if (!downloadFileLine(dio, "train.csv")) {
+            // client has given an invalid file.
+            return;
+        }
+        commandData->reader_classified.setFile("train.csv");
         int flag = commandData->reader_classified.read(true);
         if (flag == -1) {
             // read function appends values to members, so they should be erased.
-            this->dio->write("CLIENT_CMD_ABORT");
+            this->dio->write("invalid input");
             commandData->reader_classified.clearVector();
             return;
         }
-
-        this->dio->write("CLIENT_CMD_UPLOAD");
+        this->dio->write("Upload complete.\nPlease upload your local test CSV file.");
         // write the test file content into a new local file on server side
-        downloadFileLine(dio, "./test.csv");
-        commandData->reader_unclassified.setFile("./test.csv");
-        // TODO: change read(), so it can also create reader with no y_train values
+        if (!downloadFileLine(dio, "test.csv")) {
+            // client has given an invalid file
+            // first reader, that was initialized, should be cleared
+            commandData->reader_classified.clearVector();
+            return;
+        }
+        commandData->reader_unclassified.setFile("test.csv");
         flag = commandData->reader_unclassified.read(false);
-        if (flag == -1) {
-            this->dio->write("CLIENT_CMD_ABORT");
-            // TODO: check if number of features is the same in both file.
+        if (flag == -1 ||
+        commandData->reader_classified.featuresPerLine != commandData->reader_unclassified.featuresPerLine) {
+            this->dio->write("invalid input");
             // read function appends values to members, so they should be erased.
             commandData->reader_classified.clearVector();
             commandData->reader_unclassified.clearVector();
@@ -75,6 +82,9 @@ public:
         }
         commandData->isDataUploaded = true;
         this->dio->write("Upload complete.");
+        // TODO: make sure removing is doesn't interrupt other threads.
+        remove("train.csv");
+        remove("test.csv");
     }
     ~UploadCommand() override {};
 };
@@ -86,6 +96,8 @@ public:
         string k = to_string(commandData->k);
         this->dio->write("The current KNN parameters are: K = " + k + ", distance metric = " +
         commandData->distanceMetric);
+        // for client loop logic
+        this->dio->write("write");
         string input = this->dio->read();
         vector<string> dataInput = checkCommandTwo(input);
         if (dataInput.empty()) {
@@ -96,21 +108,22 @@ public:
             this->dio->write("invalid input");
             return;
         }
-        // TODO: what error to print if num of args != 2?
         // input check for values
         if (dataInput[0] == "Error" || dataInput[1] == "Error") {
-            if (dataInput[0] == "Error") {
+            if (dataInput[0] == "Error" && dataInput[1] == "Error") {
+                this->dio->write("invalid value for K, invalid value for metric");
+            } else if (dataInput[0] == "Error") {
                 this->dio->write("invalid value for K");
-            }
-            if (dataInput[1] == "Error") {
+            } else if (dataInput[1] == "Error") {
                 this->dio->write("invalid value for metric");
             }
             return;
         }
-        // if reader was constructed, should check k < number of features
+        // if reader was constructed, should check k < number of vectors (can also be number of rows in y_train)
         if (commandData->isDataUploaded &&
-        stoi(dataInput[0]) >commandData->reader_classified.featuresPerLine) {
-            this->dio->write("invalid value for K");
+        stoi(dataInput[0]) > commandData->reader_classified.X_train.size()) {
+            this->dio->write("invalid value for K - features");
+            return;
         }
         commandData->k = stoi(dataInput[0]);
         commandData->distanceMetric = dataInput[1];
@@ -127,7 +140,6 @@ public:
             this->dio->write("please upload data");
             return;
         }
-        // TODO: should run knn on classified, and than classify the unclassified
         string prediction;
         Knn knn = Knn(commandData->k,commandData->distanceMetric, commandData->reader_classified.X_train,
                       commandData->reader_classified.y_train);
@@ -135,6 +147,7 @@ public:
             prediction = knn.predict(commandData->reader_unclassified.X_train[i]);
             commandData->reader_unclassified.y_train[i] = prediction;
         }
+        this->dio->write("classifying data complete");
         commandData->isClassified = true;
     }
     ~ClassifyDataCommand() override {};
@@ -146,9 +159,11 @@ public:
     void execute(CommandData *commandData) {
         if (!commandData->isDataUploaded) {
             this->dio->write("please upload data");
+            return;
         }
         else if (!commandData->isClassified) {
             this->dio->write("please classify the data");
+            return;
         }
         // data is uploaded and classified
         else {
@@ -174,7 +189,8 @@ public:
         }
         // data is uploaded and classified
         else {
-            fstream file("./temp/cmd5download.txt", ios_base::out | ios_base::trunc);
+            fstream file("cmd5download.txt", ios_base::out | ios_base::trunc);
+            //fstream file("./temp/cmd5download.txt", ios_base::out | ios_base::trunc);
             if (!file.is_open()) {
                 this->dio->write("invalid input");
                 return;
@@ -184,13 +200,15 @@ public:
                 file << to_string(i + 1) << "\t" << commandData->reader_unclassified.y_train[i] << endl;
             }
             file.close();
-
-            // TODO: client side should check for path validity. server should write to file.
             this->dio->write("CLIENT_CMD_DOWNLOAD");
+            this->dio->write("Please enter path to the new file:");
             // checking something 20.1.23
             /* TODO: dear Orr, this file should be named differently for each client (maybe Socket number, 
             or use stream instead) */ 
-            uploadFileLine(dio, "./temp/cmd5download.txt");
+            uploadFileLine(dio, "cmd5download.txt");
+            // TODO: delete the file. should i add if/else conditions?
+            remove("cmd5download.txt");
+//            uploadFileLine(dio, "./temp/cmd5download.txt");
         }
     }
     ~DownloadResultsCommand() override {};

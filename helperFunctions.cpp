@@ -242,7 +242,11 @@ bool downloadFileLine(DefaultIO *dio, string filePath) {
         if (line == "Done.") {
             break;
         }
-        file << line << endl;
+        else if (line == "SERVER_UPLOAD_ABORT") {
+            // client signals server that he received an invalid file, and therefore should stop command.
+            return false;
+        }
+         file << line << endl;
     } while (true);
     file.close();
     return true;
@@ -388,6 +392,12 @@ vector <float> vectorAddition(vector <float> v1, vector <float> v2) {
     return v3;
 }
 
+/**
+ * function that input checks command number two.
+ * @param input - user's input. should be an k (positive integer) and a valid distance metric.
+ * @return - if input is valid, it returns input data separated into 2
+ * vector cells. else, it returns an "error" string in the cell which error has occurred.
+ */
 vector <string> checkCommandTwo (string input) {
     vector<string> words = splitString(input, ' ');
     vector <string> returnData;
@@ -409,6 +419,12 @@ vector <string> checkCommandTwo (string input) {
     returnData.emplace_back(distanceInput);
 
     if (!isPositiveInteger(kInput.c_str())) {
+        returnData[0] = "Error";
+    }
+    // kInput is a number, but too big to be an int type.
+    try {
+        int kCheck = stoi(kInput);
+    } catch (const exception& e) {
         returnData[0] = "Error";
     }
 

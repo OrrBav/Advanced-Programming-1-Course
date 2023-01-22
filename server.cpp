@@ -1,10 +1,6 @@
 
 #include "server.h"
-#include <vector>
-#include <thread>
-#include "io.h"
-#include "command.h"
-#include "CLI.h"
+
 
 /**
  * constructor for the TCP server.
@@ -12,15 +8,20 @@
  * @param file_reader - readFromFile object created from path to csv provided by user.
  * It holds information about csv file, we will later use for KNN implementation.
  */
-TCPServer::TCPServer(int port, readFromFile& file_reader) : reader(file_reader) {
+TCPServer::TCPServer(int port){
     this->port = port;
 }
 
-static void handleClient(readFromFile reader, int client_sock) {
+static void handleClient(int client_sock) {
     SocketIO *sio = new SocketIO(client_sock);
     CLI *cli = new CLI(sio);
     cli->start();
+    // if previous line is executed, client pressed 8 and connection should be closed.
+    if (close(client_sock) < 0) {
+        perror("Error closing socket");
+    }
     delete sio;
+    delete cli;
 }
 
 /**
@@ -59,9 +60,8 @@ int TCPServer::runServer(){
         perror("Error listening to a socket");
         exit(-1);
     }
-    
-    vector<thread *> open_threads;
-
+    // was <thread*>
+    //vector<thread> open_threads;
     // the server remains open (even when client side closes)
     while (true) {
         struct sockaddr_in client_sin; /* address struct for the sender info */
@@ -72,40 +72,17 @@ int TCPServer::runServer(){
             perror("Error accepting client");
             exit(-1);
         }
+        thread client_thread(handleClient, client_sock);
+        // Detach the thread so that it can run independently
+        client_thread.detach();
 
-        thread *t = new thread(handleClient, reader, client_sock);
-        open_threads.push_back(t);
     }
-
-    // iterates through all open threads and delete them from heap
-    for (auto iter = open_threads.begin(); iter != open_threads.end(); iter++) {
-        thread *t = *iter;
-        // join makes sure the thread is done running and only then allow to delete it
-        t->join();  //(*t).join
-        delete t;
-    }
-
     // closes the server socket
     close(sock);
     return 0;
 }
 
-void printMenu() {
-    //TODO further implement.
-    /*
-    vector<Command *> commands = {
-        new UploadCommand(),
-        new AlgorithmSettingsCommand()
-    };
 
-    for (int i = 0; i < commands.size(); i++) {
-        cout << i + 1 << ". " << commands.at(i)->description << endl;
-    }
-     */
-}
-
-/* extract port number and csv file from argv and perform input checks on them
-    */
 /**
  * main function of server side. Gets args from user, and performs input check on it.
  * Than it initializes TCPServer object, and runs it.
@@ -114,22 +91,18 @@ void printMenu() {
  * @return - 0;
  */
 int main (int argc, char *argv[]) {
-    if (argc != 3) {
-        cout << "Should have received " << 3 << " arguments, but received " << argc << " instead" << endl;
+    if (argc != 2) {
+        cout << "Should have received " << 2 << " arguments, but received " << argc << " instead" << endl;
         exit(-1);
     }
 
-    string filename = argv[1];
-    // check input csv file is valid and extract all its data to reader object
-    readFromFile reader;
-
     // check input port is valid
-    string port = argv[2];
+    string port = argv[1];
     if (!checkPort(port)) {
         cout << "invalid port address" << endl;
         exit(-1);
     }
-    TCPServer server = TCPServer(stoi(port), reader);
+    TCPServer server = TCPServer(stoi(port));
     server.runServer();
     return 0;
 }
