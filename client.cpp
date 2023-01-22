@@ -104,6 +104,7 @@ void TCPClient::runClient() {
     /* client runs in a loop infinitely until stopped */
     while (true) {
         // TODO: what is server is closed in the middle of client communication? exit code 13 error.
+        // TODO: should remove "Done." from the last line of downloaded file from command 5.
         string serverInput = sio.read();
         // if sio returns "" it means read_bytes <= 0
         if (serverInput == "") {

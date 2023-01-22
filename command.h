@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <cstdio>
 #include "io.h"
 #include "readFromFile.h"
 #include "function.h"
@@ -45,7 +46,6 @@ class UploadCommand : public Command {
 public:
     UploadCommand(DefaultIO *dio) : Command("1. upload an unclassified csv data file", dio) {}
     void execute(CommandData *commandData) override {
-        // TODO: server responsible for uploaded file input check, client for written file.
         this->dio->write("CLIENT_CMD_UPLOAD");
         this->dio->write("Please upload your local train CSV file.");
         // write the train file content into a new local file on server side
@@ -75,7 +75,6 @@ public:
         if (flag == -1 ||
         commandData->reader_classified.featuresPerLine != commandData->reader_unclassified.featuresPerLine) {
             this->dio->write("invalid input");
-            // TODO: check if number of features is the same in both file.
             // read function appends values to members, so they should be erased.
             commandData->reader_classified.clearVector();
             commandData->reader_unclassified.clearVector();
@@ -83,6 +82,9 @@ public:
         }
         commandData->isDataUploaded = true;
         this->dio->write("Upload complete.");
+        // TODO: make sure removing is doesn't interrupt other threads.
+        remove("./train.csv");
+        remove("./test.csv");
     }
     ~UploadCommand() override {};
 };
@@ -139,7 +141,6 @@ public:
             this->dio->write("please upload data");
             return;
         }
-        // TODO: should run knn on classified, and than classify the unclassified
         string prediction;
         Knn knn = Knn(commandData->k,commandData->distanceMetric, commandData->reader_classified.X_train,
                       commandData->reader_classified.y_train);
@@ -189,7 +190,9 @@ public:
         }
         // data is uploaded and classified
         else {
-            fstream file("./temp/cmd5download.txt", ios_base::out | ios_base::trunc);
+            // TODO: why cannot open file when named "./temp/cmd5download.txt", and not "cmd5download.txt"?
+            fstream file("cmd5download.txt", ios_base::out | ios_base::trunc);
+            //fstream file("./temp/cmd5download.txt", ios_base::out | ios_base::trunc);
             if (!file.is_open()) {
                 // TODO: why invalid here?
                 this->dio->write("invalid input - server 5");
@@ -200,14 +203,15 @@ public:
                 file << to_string(i + 1) << "\t" << commandData->reader_unclassified.y_train[i] << endl;
             }
             file.close();
-
-            // TODO: client side should check for path validity. server should write to file.
             this->dio->write("CLIENT_CMD_DOWNLOAD");
             this->dio->write("Please enter path to the new file:");
             // checking something 20.1.23
             /* TODO: dear Orr, this file should be named differently for each client (maybe Socket number, 
             or use stream instead) */ 
-            uploadFileLine(dio, "./temp/cmd5download.txt");
+            uploadFileLine(dio, "cmd5download.txt");
+            // TODO: delete the file. should i add if/else conditions?
+            remove("cmd5download.txt");
+//            uploadFileLine(dio, "./temp/cmd5download.txt");
         }
     }
     ~DownloadResultsCommand() override {};
