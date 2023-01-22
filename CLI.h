@@ -6,6 +6,8 @@
 #define ADVANCED_PROGRAMMING_1_EX4_CLI_H
 
 #include <vector>
+#include <thread>
+#include <chrono>
 #include "io.h"
 #include "command.h"
 #include "function.h"

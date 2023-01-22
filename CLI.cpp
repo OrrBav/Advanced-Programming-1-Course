@@ -56,6 +56,9 @@ void CLI::start() {
             index = 5;      // ensure command[index] works with all manu elements
         }
         commands[index]->execute(&new_commandData);
+        // makes the program sleep for a short amount of time, and helps for proper communication between client
+        // and server on PLANET. Prevents undefined behaviour due to communication lag.
+        std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
 }
 

@@ -15,6 +15,9 @@ bool handleServerInput(SocketIO sio, string serverInput) {
         // finish early if an error occurred during upload OR during file parsing
         if (!uploadFileLine(&sio, trainFilePath)) {
             // TODO: separated if statements.
+            // client will signal server (through downloadFileLine function) that given path is invalid, and he should
+            // terminate the command and go back to printing manu.
+            sio.write("SERVER_UPLOAD_ABORT");
             cout << "invalid input" << endl;
             return false;
         }
@@ -27,6 +30,9 @@ bool handleServerInput(SocketIO sio, string serverInput) {
         string testFilePath;
         getline(cin, testFilePath);
         if (!uploadFileLine(&sio, testFilePath)) {
+            // client will signal server (through downloadFileLine function) that given path is invalid, and he should
+            // terminate the command and go back to printing manu.
+            sio.write("SERVER_UPLOAD_ABORT");
             cout << "invalid input" << endl;
             return false;
         }
