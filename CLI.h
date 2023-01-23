@@ -16,9 +16,9 @@ class CLI {
     DefaultIO* dio;
     vector<Command*> commands;
     CommandData commandData;
-    // TODO: add shared state?
+    int sock;
 public:
-CLI(DefaultIO* dio);
+CLI(DefaultIO* dio, int sock, int port);
 void start();
 void printMenu();
 virtual ~CLI();

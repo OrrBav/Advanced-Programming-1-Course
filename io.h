@@ -8,16 +8,18 @@
 
 using namespace std;
 
+void trim(string& s);
+
 class DefaultIO {
 public:
     // =0 enforces the child classes to override this function with their own implementation
-    virtual string read() = 0;
+    virtual string read() const = 0;
     virtual void write(string input) = 0;
 };
 
 class StandardIO : public DefaultIO {
 public:
-    string read() {
+    string read() const {
         string input;
         getline(cin, input);
         return input;
@@ -33,7 +35,7 @@ class SocketIO : public DefaultIO {
 public:
     SocketIO(int sock) { this->sock = sock; }
     
-    string read() {
+    string read() const {
         char messageBuffer[4096]; // creates a buffer to receive the message from the client
         memset(messageBuffer, 0, sizeof(messageBuffer));
         
@@ -73,6 +75,7 @@ public:
     // first we send the length of the message,
     // and after we send the actual message which is now expected to be of that length
     void write(string input) {
+        trim(input);
         // we add +1 because of '\0' (null-terminator)
         unsigned int sizeOfMessage = input.size() + 1;
         // we treat the integer as an array of bytes, because 'send' expects array of bytes (chars) while 'size' is int

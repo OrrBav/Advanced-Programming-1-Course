@@ -19,7 +19,7 @@ using namespace std;
 class TCPClient {
     int port;
     char* ip;
-
+    bool handleServerInput(SocketIO sio, string serverInput);
 public:
     TCPClient(char* ip, int port);
     void runClient();

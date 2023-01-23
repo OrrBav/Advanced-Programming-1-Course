@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
+#include <unistd.h>
 #include "io.h"
 #include "readFromFile.h"
 #include "function.h"
@@ -23,6 +24,8 @@ struct CommandData {
     string distanceMetric = "AUC";
     bool isDataUploaded = false;
     bool isClassified = false;
+    int sock;
+    int port;
 };
 
 class Command {
@@ -50,11 +53,13 @@ public:
         this->dio->write("Please upload your local train CSV file.");
         // write the train file content into a new local file on server side
         // gets input from client side
-        if (!downloadFileLine(dio, "train.csv")) {
+        // concat socket name to file name so it has a unique name
+        const string trainFilePath = to_string(commandData->sock) + "_train.csv";
+        if (!downloadFileLine(dio, trainFilePath)) {
             // client has given an invalid file.
             return;
         }
-        commandData->reader_classified.setFile("train.csv");
+        commandData->reader_classified.setFile(trainFilePath);
         int flag = commandData->reader_classified.read(true);
         if (flag == -1) {
             // read function appends values to members, so they should be erased.
@@ -64,13 +69,15 @@ public:
         }
         this->dio->write("Upload complete.\nPlease upload your local test CSV file.");
         // write the test file content into a new local file on server side
-        if (!downloadFileLine(dio, "test.csv")) {
+        // concat socket name to file name so it has a unique name
+        const string testFilePath = to_string(commandData->sock) + "_test.csv";
+        if (!downloadFileLine(dio, testFilePath)) {
             // client has given an invalid file
             // first reader, that was initialized, should be cleared
             commandData->reader_classified.clearVector();
             return;
         }
-        commandData->reader_unclassified.setFile("test.csv");
+        commandData->reader_unclassified.setFile(testFilePath);
         flag = commandData->reader_unclassified.read(false);
         if (flag == -1 ||
         commandData->reader_classified.featuresPerLine != commandData->reader_unclassified.featuresPerLine) {
@@ -82,9 +89,8 @@ public:
         }
         commandData->isDataUploaded = true;
         this->dio->write("Upload complete.");
-        // TODO: make sure removing is doesn't interrupt other threads.
-        remove("train.csv");
-        remove("test.csv");
+        remove(trainFilePath.c_str());
+        remove(testFilePath.c_str());
     }
     ~UploadCommand() override {};
 };
@@ -140,6 +146,11 @@ public:
             this->dio->write("please upload data");
             return;
         }
+        // checks if input k is greater than number of lines in given file
+        if (commandData->k > commandData->reader_classified.X_train.size()) {
+            this->dio->write("invalid input");
+            return;
+        }
         string prediction;
         Knn knn = Knn(commandData->k,commandData->distanceMetric, commandData->reader_classified.X_train,
                       commandData->reader_classified.y_train);
@@ -189,8 +200,9 @@ public:
         }
         // data is uploaded and classified
         else {
-            fstream file("cmd5download.txt", ios_base::out | ios_base::trunc);
-            //fstream file("./temp/cmd5download.txt", ios_base::out | ios_base::trunc);
+            // concat socket name to file name so it has a unique name
+            const string downloadFilePath = to_string(commandData->sock) + "_download.txt";
+            fstream file(downloadFilePath, ios_base::out | ios_base::trunc);
             if (!file.is_open()) {
                 this->dio->write("invalid input");
                 return;
@@ -202,13 +214,28 @@ public:
             file.close();
             this->dio->write("CLIENT_CMD_DOWNLOAD");
             this->dio->write("Please enter path to the new file:");
-            // checking something 20.1.23
-            /* TODO: dear Orr, this file should be named differently for each client (maybe Socket number, 
-            or use stream instead) */ 
-            uploadFileLine(dio, "cmd5download.txt");
-            // TODO: delete the file. should i add if/else conditions?
-            remove("cmd5download.txt");
-//            uploadFileLine(dio, "./temp/cmd5download.txt");
+
+            // generate random port and send to client in range (10,000-60,000)
+            std::random_device rd;
+            std::mt19937 rng(rd());
+            std::uniform_int_distribution<int> uni(0, 50000);
+            // send the new port to client so they can both know the new one
+            auto random_integer = uni(rng);
+            int port = 10000 + random_integer;
+            
+            int sock = listenToPort(port);
+            this->dio->write(to_string(port));
+            int client_sock = acceptClient(sock);
+
+            // send file to client and close sockets
+            thread t([downloadFilePath, sock, client_sock]() {
+                SocketIO io(client_sock);
+                uploadFileLine(&io, downloadFilePath);
+                close(client_sock);
+                close(sock);
+                remove(downloadFilePath.c_str());
+            });
+            t.detach();
         }
     }
     ~DownloadResultsCommand() override {};
@@ -217,7 +244,9 @@ public:
 class ExitCommand : public Command {
 public:
     ExitCommand(DefaultIO *dio) : Command("8. exit", dio) {}
-    void execute(CommandData *commandData) {}
+    void execute(CommandData *commandData) {
+        dio->write("CLIENT_CMD_EXIT");
+    }
     ~ExitCommand() override {}
 };
 

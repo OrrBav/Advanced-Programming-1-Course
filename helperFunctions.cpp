@@ -1,6 +1,54 @@
 #include "function.h"
+#include <sys/socket.h>
+#include <stdio.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 
 using namespace std;
+
+
+int acceptClient(int sock) {
+    struct sockaddr_in client_sin; /* address struct for the sender info */
+    unsigned int addr_len = sizeof (client_sin);
+    /* accept creates a new client socket for the connecting client */
+    int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len);
+    if (client_sock < 0) {
+        perror("Error accepting client");
+        exit(-1);
+    }
+    return client_sock;
+}
+
+
+int listenToPort(int port) {
+    const int server_port = port;
+    // socket creation, sock_stream is a const for TCP
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0) {
+        perror("Error creating socket");
+        exit(-1);
+    }
+
+    /* creating the struct for the address */
+    struct sockaddr_in server_sin;     /* struct for the address */
+    memset(&server_sin, 0, sizeof (server_sin));  /* It copies a single character for a specified number
+    * of times to an object (sin) */
+    server_sin.sin_family = AF_INET;   /* address protocol type */
+    server_sin.sin_addr.s_addr = INADDR_ANY; /* const for any address */
+    server_sin.sin_port = htons(server_port); /* defines the port */
+    /* binding the socket to the port and ip_address, while checking it can be done */
+    if (bind(sock, (struct sockaddr *) &server_sin, sizeof (server_sin)) < 0) {
+        perror("Error binding socket");
+        exit(-1);
+    }
+    /* listens up to 5 clients at a time */
+    if (listen(sock, 5) < 0) {
+        perror("Error listening to a socket");
+        exit(-1);
+    }
+    return sock;
+}
 
 // split input string by given delimiter, returns vector<string> of split input
 vector<string> splitString(string str, char delim) {
@@ -230,12 +278,12 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter) {
 }
 
 // returns true on success
-bool downloadFileLine(DefaultIO *dio, string filePath) {
+bool downloadFileLine(const DefaultIO *dio, string filePath) {
     ofstream file(filePath, ios::trunc);
     if (!file.is_open()) {
         return false;
     }
-    
+
     string line;
     do {
         line = dio->read();
@@ -246,7 +294,7 @@ bool downloadFileLine(DefaultIO *dio, string filePath) {
             // client signals server that he received an invalid file, and therefore should stop command.
             return false;
         }
-         file << line << endl;
+        file << line << endl;
     } while (true);
     file.close();
     return true;
@@ -270,46 +318,46 @@ bool uploadFileLine(DefaultIO *dio, string filePath) {
 
 // NOTE: not in use, but do not delete for now!
 // returns true on success
-bool downloadFile(SocketIO sio, string filePath) {
-    ofstream file(filePath, ios::trunc);
-    if (!file.is_open()) {
-        return false;
-    }
+// bool downloadFile(SocketIO sio, string filePath) {
+//     ofstream file(filePath, ios::trunc);
+//     if (!file.is_open()) {
+//         return false;
+//     }
 
-    do {
-        string data = sio.read();
-        size_t idx = data.find("Done.");
-        if (idx != string::npos) {
-            // so we found "Done.", and save string up to its index
-            file << data.substr(0, idx - 1);
-            break;
-        }
-        file << data << endl;
-    } while (true);
+//     do {
+//         string data = sio.read();
+//         size_t idx = data.find("Done.");
+//         if (idx != string::npos) {
+//             // so we found "Done.", and save string up to its index
+//             file << data.substr(0, idx - 1);
+//             break;
+//         }
+//         file << data << endl;
+//     } while (true);
 
-    return true;
-}
+//     return true;
+// }
 // NOTE: not in use, but do not delete for now!
 // returns true on success
-bool uploadFile(SocketIO sio, string filePath) {
-    const size_t BUFFER_SIZE = 4096;
-    char buffer[BUFFER_SIZE];
-    FILE *file = fopen(filePath.c_str(), "r");
-    size_t bytes_read;
-    do {
-        bytes_read = fread(buffer, sizeof(char), BUFFER_SIZE - 1, file);
-        if (bytes_read <= 0) {
-            return false;
-        }
-        buffer[BUFFER_SIZE - 1] = '\0';
-        string str = buffer;
-        cout << str << endl;
-        sio.write(buffer);
-    // as long as we are still reading the full buffer size, it means we still need to read more
-    } while (bytes_read == BUFFER_SIZE - 1);
-    sio.write("Done.");
-    return true;
-}
+// bool uploadFile(SocketIO sio, string filePath) {
+//     const size_t BUFFER_SIZE = 4096;
+//     char buffer[BUFFER_SIZE];
+//     FILE *file = fopen(filePath.c_str(), "r");
+//     size_t bytes_read;
+//     do {
+//         bytes_read = fread(buffer, sizeof(char), BUFFER_SIZE - 1, file);
+//         if (bytes_read <= 0) {
+//             return false;
+//         }
+//         buffer[BUFFER_SIZE - 1] = '\0';
+//         string str = buffer;
+//         cout << str << endl;
+//         sio.write(buffer);
+//     // as long as we are still reading the full buffer size, it means we still need to read more
+//     } while (bytes_read == BUFFER_SIZE - 1);
+//     sio.write("Done.");
+//     return true;
+// }
 
 /*
  * calculates the subtraction result of the 2 input vectors.

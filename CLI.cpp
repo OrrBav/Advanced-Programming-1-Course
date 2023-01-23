@@ -1,9 +1,12 @@
 
 #include "CLI.h"
-CLI::CLI(DefaultIO *dio) {
+CLI::CLI(DefaultIO *dio, int sock, int port) {
+    this->sock = sock;
     this->dio = dio;
     CommandData new_commandData;
     this->commandData = new_commandData;
+    this->commandData.port = port;
+    this->commandData.sock = sock;
     commands.push_back(new UploadCommand(dio));
     commands.push_back(new AlgorithmSettingsCommand(dio));
     commands.push_back(new ClassifyDataCommand(dio));

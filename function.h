@@ -15,6 +15,9 @@ struct ParsedLine {
     vector<float> features;
     string label;
 };
+
+int listenToPort(int port);
+int acceptClient(int sock);
 vector<string> splitString(string str, char delim);
 bool checkDistanceInput(string inputDistance);
 bool checkPort (string portNum);
@@ -28,7 +31,7 @@ ParsedLine parseInput(string& line, bool hasLabel, char delimiter);
 bool uploadFile(SocketIO sio, string filePath);
 bool downloadFile(SocketIO sio, string filePath);
 bool uploadFileLine(DefaultIO *dio, string filePath);
-bool downloadFileLine(DefaultIO *dio, string filePath);
+bool downloadFileLine(const DefaultIO *dio, string filePath);
 
 vector <float> check(string input_str, vector <float>& numbers);
 void print_decimal(float q);

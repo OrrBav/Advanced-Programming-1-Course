@@ -1,7 +1,6 @@
 
 #include "server.h"
 
-
 /**
  * constructor for the TCP server.
  * @param port - int between 1024-65535
@@ -12,9 +11,9 @@ TCPServer::TCPServer(int port){
     this->port = port;
 }
 
-static void handleClient(int client_sock) {
+static void handleClient(int client_sock, int port) {
     SocketIO *sio = new SocketIO(client_sock);
-    CLI *cli = new CLI(sio);
+    CLI *cli = new CLI(sio, client_sock, port);
     cli->start();
     // if previous line is executed, client pressed 8 and connection should be closed.
     if (close(client_sock) < 0) {
@@ -34,45 +33,11 @@ static void handleClient(int client_sock) {
  * @return
  */
 int TCPServer::runServer(){
-    
-    const int server_port = this->port;
-    // socket creation, sock_stream is a const for TCP
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (sock < 0) {
-        perror("Error creating socket");
-        exit(-1);
-    }
-
-    /* creating the struct for the address */
-    struct sockaddr_in server_sin;     /* struct for the address */
-    memset(&server_sin, 0, sizeof (server_sin));  /* It copies a single character for a specified number
-    * of times to an object (sin) */
-    server_sin.sin_family = AF_INET;   /* address protocol type */
-    server_sin.sin_addr.s_addr = INADDR_ANY; /* const for any address */
-    server_sin.sin_port = htons(server_port); /* defines the port */
-    /* binding the socket to the port and ip_address, while checking it can be done */
-    if (bind(sock, (struct sockaddr *) &server_sin, sizeof (server_sin)) < 0) {
-        perror("Error binding socket");
-        exit(-1);
-    }
-    /* listens up to 5 clients at a time */
-    if (listen(sock, 5) < 0) {
-        perror("Error listening to a socket");
-        exit(-1);
-    }
-    // was <thread*>
-    //vector<thread> open_threads;
+    int sock = listenToPort(this->port);
     // the server remains open (even when client side closes)
     while (true) {
-        struct sockaddr_in client_sin; /* address struct for the sender info */
-        unsigned int addr_len = sizeof (client_sin);
-        /* accept creates a new client socket for the connecting client */
-        int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len);
-        if (client_sock < 0) {
-            perror("Error accepting client");
-            exit(-1);
-        }
-        thread client_thread(handleClient, client_sock);
+        int client_sock = acceptClient(sock);
+        thread client_thread(handleClient, client_sock, this->port);
         // Detach the thread so that it can run independently
         client_thread.detach();
 
