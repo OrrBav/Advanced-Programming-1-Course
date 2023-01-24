@@ -1,6 +1,11 @@
 # Advanced-Programming-1 - Ex 3
 This is the manual for Ex3.
 
+Draft: manual for ex4. <br>
+Note: in Command 5, user should give a path containing the new file(with fime name) he wish to download the classification into, for example: "C:\Users\some_name\Desktop\filename.csv", or path in linux syntax, if project is run from a linux based system. <br>
+Note: K value should be lower than the number of rows in the input classified files, for KNN algorithem to run. If k is set after command 1 is executed, program will print invalid input in this scenario. <br>
+If k was set before command 1, and its value is indeed bigger than number of rows, running command 3 will set K to be the maximun value it can be, meaning - number of rows.
+
 **to compile and run perform the following commands:**  
 Open 2 terminals (1- for server side, 2- for client side):  
 On both Terminals 1 & 2:
