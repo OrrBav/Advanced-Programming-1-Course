@@ -102,8 +102,6 @@ bool TCPClient::handleServerInput(SocketIO sio, string serverInput) {
         return false;
     } else if (serverInput == "CLIENT_CMD_ABORT") {
         return false;
-    } else if (serverInput == "CLIENT_CMD_EXIT") {
-        exit(-1);
     } else {
         cout << serverInput << endl;
     }
@@ -134,7 +132,7 @@ void TCPClient::runClient() {
     while (true) {
         string serverInput = sio.read();
         // if sio returns "" it means read_bytes <= 0
-        if (serverInput == "") {
+        if (serverInput == "" || serverInput == "CLIENT_CMD_EXIT") {
             perror("connection is closed");
             break;
         }

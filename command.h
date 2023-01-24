@@ -146,10 +146,10 @@ public:
             this->dio->write("please upload data");
             return;
         }
-        // checks if input k is greater than number of lines in given file
+        // checks if input k is greater than number of lines in given file, and if so - sets k to be the
+        // max valid value = number of rows in the classified vector.
         if (commandData->k > commandData->reader_classified.X_train.size()) {
-            this->dio->write("invalid input");
-            return;
+            commandData->k =  commandData->reader_classified.X_train.size();
         }
         string prediction;
         Knn knn = Knn(commandData->k,commandData->distanceMetric, commandData->reader_classified.X_train,
