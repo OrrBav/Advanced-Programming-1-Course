@@ -1,10 +1,6 @@
 
 #include "client.h"
-#include <random>
-#include <thread>
 
-
-using namespace std;
 
 int connectToServer(char *ip, int port) {
     int sock  = socket(AF_INET, SOCK_STREAM, 0);
@@ -126,7 +122,6 @@ TCPClient::TCPClient(char *ip, int port) {
  */
 void TCPClient::runClient() {
     int sock = connectToServer(this->ip, this->port);
-
     SocketIO sio(sock);
     /* client runs in a loop infinitely until stopped */
     while (true) {

@@ -1,5 +1,6 @@
 
 #include "CLI.h"
+
 CLI::CLI(DefaultIO *dio, int sock, int port) {
     this->sock = sock;
     this->dio = dio;

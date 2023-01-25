@@ -44,7 +44,9 @@ public:
     virtual ~Command(){};
 };
 
-
+/**
+ * class that is responsible for receiving the data from client.
+ */
 class UploadCommand : public Command {
 public:
     UploadCommand(DefaultIO *dio) : Command("1. upload an unclassified csv data file", dio) {}
@@ -95,6 +97,9 @@ public:
     ~UploadCommand() override {};
 };
 
+/**
+ * class that is responsible for determine the algorithm setting for KNN.
+ */
 class AlgorithmSettingsCommand : public Command {
 public:
     AlgorithmSettingsCommand(DefaultIO *dio) : Command("2. algorithm settings", dio) {}
@@ -137,6 +142,9 @@ public:
     ~AlgorithmSettingsCommand() override {};
 };
 
+/**
+ * class that is responsible for classifing the data uploaded in command 1, using KNN.
+ */
 class ClassifyDataCommand : public Command {
 public:
     ClassifyDataCommand(DefaultIO *dio) : Command("3. classify data", dio) {}
@@ -164,6 +172,9 @@ public:
     ~ClassifyDataCommand() override {};
 };
 
+/**
+ * class that is responsible for sending back the classified data.
+ */
 class DisplayResultCommand : public Command {
 public:
     DisplayResultCommand(DefaultIO *dio) : Command("4. display results", dio) {}
@@ -188,6 +199,9 @@ public:
     ~DisplayResultCommand() override {};
 };
 
+/**
+ * class that is responsible for sending back the classified data, for the client to save it.
+ */
 class DownloadResultsCommand : public Command {
 public:
     DownloadResultsCommand(DefaultIO *dio) : Command("5. download results", dio) {}
@@ -241,6 +255,9 @@ public:
     ~DownloadResultsCommand() override {};
 };
 
+/**
+ * class that is responsible for ending the program and exiting the Menu loop.
+ */
 class ExitCommand : public Command {
 public:
     ExitCommand(DefaultIO *dio) : Command("8. exit", dio) {}

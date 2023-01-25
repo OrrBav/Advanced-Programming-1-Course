@@ -11,6 +11,14 @@ TCPServer::TCPServer(int port){
     this->port = port;
 }
 
+/**
+ * function is responsible to handle the flow of Menu with the client, by creating a CLI object that will
+ * loop, sending and receiving information from client, using CLI's start function. When user decide to end
+ * program, client will send a message back to server that will end the loop in CLI::start function, where handleClient
+ * function will delete its recourses and terminate.
+ * @param client_sock - the sock that connects to client. Used to create SocketIO object.
+ * @param port - the port that connect the server and the client.
+ */
 static void handleClient(int client_sock, int port) {
     SocketIO *sio = new SocketIO(client_sock);
     CLI *cli = new CLI(sio, client_sock, port);
@@ -40,7 +48,6 @@ int TCPServer::runServer(){
         thread client_thread(handleClient, client_sock, this->port);
         // Detach the thread so that it can run independently
         client_thread.detach();
-
     }
     // closes the server socket
     close(sock);

@@ -11,6 +11,8 @@
 #include <string.h>
 #include <string>
 #include <vector>
+#include <random>
+#include <thread>
 #include "readFromFile.h"
 #include "function.h"
 #include "io.h"

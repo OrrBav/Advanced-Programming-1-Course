@@ -17,6 +17,9 @@ public:
     virtual void write(string input) = 0;
 };
 
+/**
+ * class for standard input/output.
+ */
 class StandardIO : public DefaultIO {
 public:
     string read() const {
@@ -34,7 +37,12 @@ class SocketIO : public DefaultIO {
     int sock;
 public:
     SocketIO(int sock) { this->sock = sock; }
-    
+
+    /**
+     * reads bytes from network using TCP protocol. First it receives the number of bytes of incoming message,
+     * and than the message itself.
+     * @return - a string representation of the message.
+     */
     string read() const {
         char messageBuffer[4096]; // creates a buffer to receive the message from the client
         memset(messageBuffer, 0, sizeof(messageBuffer));
@@ -71,9 +79,12 @@ public:
         return messageBuffer;
     };
 
-    // send bytes over network
-    // first we send the length of the message,
-    // and after we send the actual message which is now expected to be of that length
+
+    /**
+     * sends bytes over network, using TCP protocol. First we send the length of the message, and after we send the
+     * actual message which is now expected to be of that length
+     * @param input - input string we wish to send
+     */
     void write(string input) {
         trim(input);
         // we add +1 because of '\0' (null-terminator)

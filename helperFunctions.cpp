@@ -81,22 +81,6 @@ bool checkInputData(string data) {
     // after popping k and distance, the rest is just the vector
     vector<string> vecFloatInputs = words;
 
-    /* ORR's check input k
-    if (kInput.empty()) {
-        cout << "invalid k value 1" << endl;
-        return false;
-    }
-    for (char c : kInput) {
-        if (!isdigit(c)) {
-            cout << "invalid k value 2: " << c << endl;
-            return false;
-        }
-    }
-    int k = stoi(kInput);
-    if (k < 1) {
-        cout << "invalid k value 3" << endl;
-        return false;
-    } */
 
     if (!isPositiveInteger(kInput.c_str())) {
         return false;
