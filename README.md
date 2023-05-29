@@ -1,4 +1,4 @@
-# Advanced-Programming-1 - Ex 4
+# Advanced-Programming-1
 This is the manual for Ex4.
 
 **to compile and run perform the following commands:**  
